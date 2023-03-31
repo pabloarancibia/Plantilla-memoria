@@ -31,18 +31,31 @@ En el taller de rectificaciones de motopartes se realizan diferentes tipos de tr
 
 Las etapas en general que atraviesa un repuesto desde que ingresa hasta que es retirado de la empresa son:
 \begin{enumerate}
-\item Ingreso de la pieza o repuesto a la empresa. 	
+\item Ingreso de la pieza o repuesto a la empresa: 	
 
-Un cliente de la empresa se presenta con una pieza para ser reparada, el personal de atención le informa el precio del servicio, fecha de entrega, entre otros datos
+Un cliente de la empresa se presenta con una pieza para ser reparada, el personal de atención le informa el precio del servicio, fecha de entrega, entre otros datos.
 
-\item Registro de datos del cliente y generación de orden de trabajo.
-\item Puesta en espera del repuesto.
-\item Trabajo de mano de obra correspondiente.
-\item Finalización del trabajo de mano de obra.
-\item Entrega del repuesto al cliente.
+\item Registro de datos del cliente y generación de orden de trabajo:
+
+Luego de aceptadas las condiciones por el cliente, se registran sus datos y se genera una orden de trabajo.
+
+\item Puesta en espera del repuesto:
+
+Se ubica la pieza en el sector de trabajos en espera.
+
+\item Trabajo de mano de obra correspondiente:
+
+Una vez que un empleado de taller de la empresa está libre toma el repuesto para efectuar la mano de obra necesaria.
+
+\item Finalización del trabajo de mano de obra:
+
+Se coloca el repuesto en el sector de finalizados a la espera de ser retirado por el cliente.
+
+\item Entrega del repuesto al cliente:
+
+Cuando el cliente pasa a retirar su pieza, se registran los datos correspondientes y se hace la entrega finalizando así todas las etapas del servicio.
+
 \end{enumerate}
-
- (punto 1). Luego de aceptadas las condiciones por el cliente, se registran sus datos y se genera una orden de trabajo (punto 2), posteriormente se ubica la pieza en el sector de trabajos en espera (punto 3). Una vez que un empleado de taller de la empresa está libre toma el repuesto para efectuar la mano de obra necesaria (punto 4), en esta etapa se realizan distintos tipos de tareas hasta que se termina todo el proceso y se coloca el repuesto en el sector de finalizados a la espera de ser retirado por el cliente (punto 5). Cuando el cliente pasa a retirar su pieza, se registran los datos correspondientes y se hace la entrega finalizando así todas las etapas del servicio.
 
 %----------------------------------------------------------------------------------------
 
@@ -60,7 +73,7 @@ Ante este escenario es evidente la necesidad de contar con un sistema informáti
 
 \section{Estado del arte}
 
-En el mercado argentino actualmente se ofrecen diferentes soluciones para resolver problemas relacionados al control de productos ya sea de stock, logística, trazabilidad, transporte, distribución, entre otros. Estas soluciones están basadas en su mayoría en tecnología de lectura de código de barras o de ingresos manuales de datos mediante teclado. Además existen algunas soluciones de empresas extranjeras, más orientadas al sector industrial, basadas en tecnología RFID \citep{WEBSITE:RFID}, en su mayoría por banda UHF \citep{WEBSITE:UHF}.
+En el mercado argentino actualmente se ofrecen diferentes soluciones para resolver problemas relacionados al control de productos ya sea de stock, logística, trazabilidad, transporte, distribución, entre otros. Estas soluciones están basadas en su mayoría en tecnología de lectura de código de barras o de ingresos manuales de datos mediante teclado. Además, existen algunas soluciones de empresas extranjeras, más orientadas al sector industrial, basadas en tecnología RFID \citep{WEBSITE:RFID}, en su mayoría por banda UHF \citep{WEBSITE:UHF}.
 
 No se encontraron soluciones en el mercado para las necesidades específicas que se plantean en este trabajo. Una de las problemáticas que plantea el escenario para el cual se desarrolla este sistema, es el contexto en el que se realizan los servicios. Las piezas que se reparan están sometidas constantemente a aceites, residuos grasos, polvo, etc. Este escenario hace que se descarte el uso de la tecnología de lectura de código de barras, ya que cualquier lectura a un código sería dificultada por lo mencionado, quedando como mejor opción la utilización de tecnología RFID.
 
@@ -75,10 +88,10 @@ Las soluciones RFID encontradas están planteadas para otro tipo de rubros o ind
 		\toprule
 		\textbf{Característica} 	 & \textbf{Telectrónica} 		  \\
 		\midrule
-		Tecnología RFID	 & si				 \\
-		Rubro motores & no \\		
-		Costo accesible a empresa pequeña	 & no				 \\
-		Hardware económico	 & no				 \\
+		Tecnología RFID	 & Sí				 \\
+		Rubro motores & No \\		
+		Costo accesible a empresa pequeña	 & No				 \\
+		Hardware económico	 & No				 \\
 		\bottomrule
 		\hline
 	\end{tabular}
@@ -107,7 +120,7 @@ El alcance del trabajo se acotó a lo siguiente:
 	\item Desarrollo backend: API Rest.
 	\item Desarrollo de base de datos.
 	\item Desarrollo e implementación en dispositivos de hardware IoT.
-	\item Desarrollo e implementación de la infraestructura total del sistema, servidor basado en contenedores para servicio web, API Rest, bróker mqtt y base de datos. 
+	\item Desarrollo e implementación de la infraestructura total del sistema, servidor basado en contenedores para servicio web, API Rest, bróker MQTT y base de datos. 
 	\item Implementaciones particulares como gabinetes, soportes para tags RFID, entre otros.                  
 \end{itemize}
 %\subsection{Paquetes adicionales}
@@ -216,71 +229,71 @@ El alcance del trabajo se acotó a lo siguiente:
 %Finalmente, se encuentra el código para incluir la bibliografía en el documento final.  Este código tampoco debe modificarse. La metodología para trabajar las referencias bibliográficas se desarrolla en la sección \ref{sec:biblio}.
 %%----------------------------------------------------------------------------------------
 %
-\section{Bibliografía}
-\label{sec:biblio}
+% \section{Bibliografía}
+% \label{sec:biblio}
 
-Las opciones de formato de la bibliografía se controlan a través del paquete de latex \option{biblatex} que se incluye en la memoria en el archivo memoria.tex.  Estas opciones determinan cómo se generan las citas bibliográficas en el cuerpo del documento y cómo se genera la bibliografía al final de la memoria.
+% Las opciones de formato de la bibliografía se controlan a través del paquete de latex \option{biblatex} que se incluye en la memoria en el archivo memoria.tex.  Estas opciones determinan cómo se generan las citas bibliográficas en el cuerpo del documento y cómo se genera la bibliografía al final de la memoria.
 
-En el preámbulo se puede encontrar el código que incluye el paquete biblatex, que no requiere ninguna modificación del usuario de la plantilla, y que contiene las siguientes opciones:
+% En el preámbulo se puede encontrar el código que incluye el paquete biblatex, que no requiere ninguna modificación del usuario de la plantilla, y que contiene las siguientes opciones:
 
-\begin{lstlisting}
-\usepackage[backend=bibtex,
-	natbib=true, 
-	style=numeric, 
-	sorting=none]
-{biblatex}
-\end{lstlisting}
+% \begin{lstlisting}
+% \usepackage[backend=bibtex,
+% 	natbib=true, 
+% 	style=numeric, 
+% 	sorting=none]
+% {biblatex}
+% \end{lstlisting}
 
-En el archivo \file{references.bib} se encuentran las referencias bibliográficas que se pueden citar en el documento.  Para incorporar una nueva cita al documento lo primero es agregarla en este archivo con todos los campos necesario.  Todas las entradas bibliográficas comienzan con $@$ y una palabra que define el formato de la entrada.  Para cada formato existen campos obligatorios que deben completarse. No importa el orden en que las entradas estén definidas en el archivo .bib.  Tampoco es importante el orden en que estén definidos los campos de una entrada bibliográfica. A continuación se muestran algunos ejemplos:
+% En el archivo \file{references.bib} se encuentran las referencias bibliográficas que se pueden citar en el documento.  Para incorporar una nueva cita al documento lo primero es agregarla en este archivo con todos los campos necesario.  Todas las entradas bibliográficas comienzan con $@$ y una palabra que define el formato de la entrada.  Para cada formato existen campos obligatorios que deben completarse. No importa el orden en que las entradas estén definidas en el archivo .bib.  Tampoco es importante el orden en que estén definidos los campos de una entrada bibliográfica. A continuación se muestran algunos ejemplos:
 
-\begin{lstlisting}
-@ARTICLE{ARTICLE:1,
-   AUTHOR="John Doe",
-   TITLE="Title",
-   JOURNAL="Journal",
-   YEAR="2017",
-}
-\end{lstlisting}
-
-
-\begin{lstlisting}
-@BOOK{BOOK:1,
-   AUTHOR="John Doe",
-   TITLE="The Book without Title",
-   PUBLISHER="Dummy Publisher",
-   YEAR="2100",
-}
-\end{lstlisting}
+% \begin{lstlisting}
+% @ARTICLE{ARTICLE:1,
+%    AUTHOR="John Doe",
+%    TITLE="Title",
+%    JOURNAL="Journal",
+%    YEAR="2017",
+% }
+% \end{lstlisting}
 
 
-\begin{lstlisting}
-@INBOOK{BOOK:2,
-   AUTHOR="John Doe",
-   TITLE="The Book without Title",
-   PUBLISHER="Dummy Publisher",
-   YEAR="2100",
-   PAGES="100-200",
-}
-\end{lstlisting}
+% \begin{lstlisting}
+% @BOOK{BOOK:1,
+%    AUTHOR="John Doe",
+%    TITLE="The Book without Title",
+%    PUBLISHER="Dummy Publisher",
+%    YEAR="2100",
+% }
+% \end{lstlisting}
 
 
-\begin{lstlisting}
-@MISC{WEBSITE:1,
-   HOWPUBLISHED = "\url{http://example.com}",
-   AUTHOR = "Intel",
-   TITLE = "Example Website",
-   MONTH = "12",
-   YEAR = "1988",
-   URLDATE = {2012-11-26}
-}
-\end{lstlisting}
+% \begin{lstlisting}
+% @INBOOK{BOOK:2,
+%    AUTHOR="John Doe",
+%    TITLE="The Book without Title",
+%    PUBLISHER="Dummy Publisher",
+%    YEAR="2100",
+%    PAGES="100-200",
+% }
+% \end{lstlisting}
 
-Se debe notar que los nombres \emph{ARTICLE:1}, \emph{BOOK:1}, \emph{BOOK:2} y \emph{WEBSITE:1} son nombres de fantasía que le sirve al autor del documento para identificar la entrada. En este sentido, se podrían reemplazar por cualquier otro nombre.  Tampoco es necesario poner : seguido de un número, en los ejemplos sólo se incluye como un posible estilo para identificar las entradas.
 
-La entradas se citan en el documento con el comando: 
+% \begin{lstlisting}
+% @MISC{WEBSITE:1,
+%    HOWPUBLISHED = "\url{http://example.com}",
+%    AUTHOR = "Intel",
+%    TITLE = "Example Website",
+%    MONTH = "12",
+%    YEAR = "1988",
+%    URLDATE = {2012-11-26}
+% }
+% \end{lstlisting}
 
-\begin{verbatim}
-\citep{nombre_de_la_entrada}
-\end{verbatim}
+% Se debe notar que los nombres \emph{ARTICLE:1}, \emph{BOOK:1}, \emph{BOOK:2} y \emph{WEBSITE:1} son nombres de fantasía que le sirve al autor del documento para identificar la entrada. En este sentido, se podrían reemplazar por cualquier otro nombre.  Tampoco es necesario poner : seguido de un número, en los ejemplos sólo se incluye como un posible estilo para identificar las entradas.
 
-Y cuando se usan, se muestran así: \citep{ARTICLE:1}, \citep{BOOK:1}, \citep{BOOK:2}, \citep{WEBSITE:1}.  Notar cómo se conforma la sección Bibliografía al final del documento. 
+% La entradas se citan en el documento con el comando: 
+
+% \begin{verbatim}
+% \citep{nombre_de_la_entrada}
+% \end{verbatim}
+
+% Y cuando se usan, se muestran así: \citep{ARTICLE:1}, \citep{BOOK:1}, \citep{BOOK:2}, \citep{WEBSITE:1}.  Notar cómo se conforma la sección Bibliografía al final del documento. 

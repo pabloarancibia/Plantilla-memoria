@@ -80,10 +80,140 @@ En la figura \ref{fig:mqttArq} se puede apreciar un ejemplo de comunicación en 
 
 La estructura de mensajes en este protocolo se dividen en dos: \textit{topics} los cuales son de tipo jerárquicos, utilizando la barra (/) como separador, y \textit{payload} en dónde se incluye el mensaje que se quiere transmitir. Por ejemplo: topic: "nodos/procesos/guardar", payload:"mensaje de ejemplo". Siguiendo este ejemplo un cliente podría suscribirse a ese topic o a una jerarquía más alta y recibir todos los mensajes de los topics que comiencen con nodo/procesos. 
 
-\subsection{Eclipse Mosquitto}
+\subsection{Ecliplse Mosquitto}
 \label{subsec:mosquitto}
 
 Eclipse Mosquitto \citep{WEBSITE:MOSQUITTO} es un broker MQTT OpenSource liviano y adecuado para utilizar en todo tipo de dispositivos sobre todo aquellos que cuenten con baja potencia como microcontroladores.
+
+El objetivo de Mosquitto es proporcionar una implementación ligera y de bajo consumo de recursos para permitir la comunicación entre dispositivos IoT en redes con ancho de banda limitado y recursos de memoria.
+
+Mosquitto es compatible con una amplia gama de lenguajes de programación, lo que lo hace fácilmente integrable con diferentes aplicaciones. Además, cuenta con una arquitectura flexible y escalable que permite su implementación en dispositivos con diferentes capacidades de procesamiento y memoria.
+
+Otra característica importante de este broker es su capacidad para manejar conexiones seguras a través del uso de protocolos de seguridad como SSL/TLS y SASL. Esto permite la comunicación segura y cifrada entre dispositivos de IoT en diferentes entornos de red.	
+
+\section{Bases de datos}
+\label{sec:ddbb}
+
+Las bases de datos son una parte esencial de cualquier aplicación IoT, ya que se utilizan para almacenar y gestionar los datos recopilados por los dispositivos IoT. En esta sección, se describen las tecnologías utilizadas en bases de datos.
+
+\subsection{Bases de datos relacionales}
+\label{subsec:RDBMS}
+
+Las bases de datos relacionales son un tipo de sistema de gestión de bases de datos (SGBD) que se basa en el modelo de datos relacional. Este modelo se utiliza para organizar y almacenar datos en tablas, donde cada tabla representa una entidad o concepto del mundo real y cada fila representa una instancia de esa entidad.
+
+Las tablas se relacionan entre sí mediante claves primarias y claves externas, lo que permite establecer relaciones entre las entidades y realizar consultas complejas que combinan datos de varias tablas. Además, las bases de datos relacionales utilizan el lenguaje de consulta estructurado (SQL o \textit{Structured Query Language}) para interactuar con los datos almacenados en la base de datos.
+
+En la figura \ref{fig:relddbb} se puede apreciar un ejemplo de un diagrama de base de datos relacional con sus tablas, filas y relaciones.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.40]{./Figures/relddbb.jpg}
+	\caption{Diagrama base de datos relacional.}
+	\label{fig:relddbb}
+\end{figure}
+
+\subsection{MySql}
+\label{subsec:mysql}
+
+MySql \cite{mysql-docs} es un sistema de gestión de bases de datos relacional y de código abierto, que utiliza el lenguaje SQL para interactuar con los datos almacenados en la base de datos. 
+
+Ofrece una amplia gama de características avanzadas, como soporte para transacciones ACID, índices avanzados, clústeres de alta disponibilidad y replicación. Además, admite múltiples lenguajes de programación, incluyendo C, C++, Python, Java y Ruby, lo que lo hace extremadamente flexible y escalable.
+
+Tiene múltiples capas de seguridad integradas en el sistema, incluyendo autenticación y control de acceso basado en roles. 
+
+Debido a su combinación de características avanzadas, flexibilidad y seguridad, MySql se utiliza ampliamente en aplicaciones de misión crítica y de alta disponibilidad, incluyendo aplicaciones IoT.
+
+\section{Tecnologías backend}
+\label{sec:backend}
+
+Las tecnologías backend se utilizan para desarrollar la lógica de la aplicación y gestionar la comunicación entre el servidor y los dispositivos IoT. En esta sección, se describen las tecnologías backend utilizadas.
+
+\subsection{API RESTFul}
+\label{subsec:apis}
+
+Las APIs RESTful \textit{(Representational State Transfer)} son una arquitectura de diseño de aplicaciones web que utiliza el protocolo HTTP para transferir datos. Las API RESTful están diseñadas para ser escalables, flexibles y fáciles de entender para los desarrolladores y los clientes que las consumen.
+
+Están basadas en el concepto de recursos, que son objetos o conjuntos de datos que se pueden acceder a través de una URI (Identificador de recurso uniforme, por sus siglas en inglés). Cada recurso tiene un conjunto de operaciones que se pueden realizar sobre él, como GET (para obtener los datos del recurso), POST (para crear un nuevo recurso), PUT (para actualizar un recurso existente) y DELETE (para eliminar un recurso).
+
+En la figura \ref{fig:apirest} se puede apreciar un ejemplo de una arquitectura API rest, incluyendo la petición o \textit{request} del usuario en formato JSON, el método HTTP y la respuesta o \textit{response} del servidor.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.15]{./Figures/apirest.png}
+	\caption{Arquitectura API Rest.}
+	\label{fig:apirest}
+\end{figure}
+
+\subsection{Node.js}
+\label{subsec:nodejs}
+
+Node.js es un entorno de tiempo de ejecución de JavaScript de código abierto que se ejecuta en el servidor. Fue creado en 2009 con el objetivo de poder desarrollar aplicaciones escalables y de alto rendimiento utilizando el mismo lenguaje de programación para el lado del servidor y del cliente.
+
+Se basa en el motor de JavaScript V8 de Google, lo que lo hace muy rápido y eficiente. Utiliza un modelo de E/S sin bloqueo y orientado a eventos, lo que significa que es capaz de manejar un gran número de solicitudes simultáneas sin bloquear el proceso. Esto lo hace especialmente adecuado para aplicaciones web en tiempo real y aplicaciones de transmisión de medios.
+
+También cuenta con una amplia variedad de módulos y bibliotecas disponibles a través de su gestor de paquetes NPM. Esto permite aprovechar funcionalidades existentes, desde la creación de APIs RESTful hasta la manipulación de archivos, la comunicación con dispositivos y bases de datos.
+
+\subsection{Express}
+\label{subsec:express}
+
+Express es un popular framework de Node.js utilizado para la creación de aplicaciones web y APIs RESTful. Fue creado en 2010 y es mantenido por la comunidad de desarrolladores de Node.js.
+
+Proporciona una serie de funcionalidades para simplificar el proceso de creación de aplicaciones web. Entre ellas se incluyen el manejo de rutas, la gestión de middleware, la manipulación de sesiones y cookies, la autenticación de usuarios y la integración con bases de datos.
+
+En Express, el manejo de rutas se realiza mediante la definición de las rutas y los controladores correspondientes. Las rutas son los patrones utilizados para identificar las solicitudes HTTP entrantes que serán atendidas por la aplicación web. Los controladores son las funciones que se encargan de procesar esas solicitudes y generar la respuesta adecuada.
+
+Para definir una ruta, se utiliza el método correspondiente al verbo HTTP que se desea manejar (GET, POST, PUT, DELETE, etc.), seguido de la ruta o patrón que se desea asociar a esa solicitud. 
+
+\subsection{Sequelize}
+\label{subsec:sequelize}
+
+Sequelize es una librería de ORM \textit{(Object-Relational Mapping)} para Node.js que permite trabajar con bases de datos relacionales como MySQL, PostgreSQL, SQLite, y MSSQL. Facilita el acceso a la base de datos y permite la creación de consultas a través de una interfaz de programación de aplicaciones (API) de alto nivel basada en objetos.
+
+Se utiliza junto a Express y Node.js para simplificar el proceso de acceso y manipulación de datos en bases de datos relacionales. Al utilizar Sequelize, se pueden crear modelos de datos que representen las tablas de la base de datos, lo que permite interactuar con la base de datos utilizando objetos en lugar de consultas SQL.
+
+\section{Tecnologías frontend}
+\label{sec:frontend}
+
+Las tecnologías frontend son aquellas que se utilizan para crear la parte visual y de interacción de una aplicación web o móvil. Estas tecnologías se enfocan en la presentación y manipulación de la interfaz de usuario, en la interacción con el usuario final y actúa como intermediario entre el usuario final y el backend de la aplicación.
+
+Algunas de las tecnologías frontend más comunes son:
+\begin{itemize}
+	\item HTML \textit{(HyperText Markup Language)}: Es el lenguaje de marcado que se utiliza para estructurar y dar formato al contenido de una página web.
+	\item CSS \textit{(Cascading Style Sheets)}: Es el lenguaje utilizado para dar estilo y diseño a una página web, permitiendo la personalización de fuentes, colores, márgenes, tamaños y otros aspectos visuales.
+	\item JavaScript: Es un lenguaje de programación que se utiliza para hacer que la página web sea interactiva y dinámica, permitiendo la manipulación de elementos del DOM, eventos, animaciones y otras acciones en el lado del cliente.
+	\item Frameworks de JavaScript: Son librerías que permiten simplificar el desarrollo de aplicaciones web, proporcionando funcionalidades predefinidas y estructuras de organización.
+	\item Bibliotecas de diseño: Son herramientas que ofrecen componentes visuales predefinidos y estilos de diseño que permiten crear páginas web con un aspecto más profesional y elegante.
+	\item Herramientas de gestión de paquetes: Son programas que permiten gestionar las dependencias de los proyectos y mantener actualizadas las librerías utilizadas en el desarrollo.	
+\end{itemize}
+
+\subsection{Ionic framework}
+\label{subsec:ionic}
+
+Ionic es un framework de desarrollo de aplicaciones móviles híbridas basado en tecnologías web como HTML, CSS y JavaScript. Permite crear aplicaciones móviles para iOS, Android y la web utilizando un conjunto de herramientas y librerías predefinidas.
+
+Ofrece una gran cantidad de componentes visuales, animaciones y funcionalidades para crear aplicaciones móviles con una apariencia y experiencia de usuario nativa, similar a las aplicaciones desarrolladas con tecnologías nativas como Java para Android o Swift para iOS. Además, permite la integración con otras tecnologías como Angular y React.
+
+El uso de tecnologías web permite el desarrollo de aplicaciones móviles de forma más rápida y sencilla que las aplicaciones nativas, ya que se utiliza un único código base que se puede adaptar para cada plataforma. Además, ofrece una gran cantidad de herramientas y servicios para simplificar el proceso de desarrollo, como Ionic Native (para el acceso a las características nativas del dispositivo) y Ionic Appflow (para la implementación continua y la gestión de versiones).
+
+%En resumen, Ionic es una herramienta muy útil para el desarrollo de aplicaciones móviles híbridas utilizando tecnologías web, que permite crear aplicaciones con una apariencia y experiencia de usuario nativa, y que simplifica el proceso de desarrollo gracias a su conjunto de herramientas y servicios predefinidos.
+
+\section{Tecnologías de servidor}
+\label{sec:servidor}
+
+\subsection{Docker y Docker Compose}
+\label{subsec:docker}
+
+Docker es una plataforma de software libre que se utiliza para desarrollar, implementar y ejecutar aplicaciones en contenedores. Los contenedores son una forma de virtualización que permiten a los desarrolladores empaquetar una aplicación y todas sus dependencias en una imagen de contenedor, que se puede ejecutar en cualquier entorno que tenga Docker instalado. Docker facilita la implementación de aplicaciones en diferentes plataformas, desde servidores locales hasta nubes públicas.
+
+Docker Compose es una herramienta de Docker que se utiliza para definir y ejecutar aplicaciones de múltiples contenedores. Permite definir todos los servicios necesarios para una aplicación en un archivo de configuración YAML, lo que facilita la implementación y el mantenimiento de la aplicación. Docker Compose puede iniciar todos los contenedores necesarios para la aplicación con un solo comando, lo que ahorra tiempo y reduce los errores.
+
+\subsection{Servidor web Nginx}
+\label{subsec:servidorweb}
+
+Un servidor web es un software que procesa solicitudes HTTP de clientes y responde con contenido estático o dinámico. Los servidores web se utilizan para alojar y servir sitios web y aplicaciones web. Un servidor web típicamente aloja varios sitios web y puede gestionar múltiples solicitudes HTTP simultáneamente.
+
+Nginx es un servidor web de código abierto que se utiliza para alojar y servir sitios web y aplicaciones web. Nginx es conocido por su alta escalabilidad, rendimiento y capacidad de manejar múltiples solicitudes HTTP simultáneamente. Es un servidor web ligero y rápido que se puede utilizar como un proxy inverso para distribuir la carga de trabajo a diferentes servidores y balancear la carga de tráfico.
+
 %Se recomienda no utilizar \textbf{texto en negritas} en ningún párrafo, ni tampoco texto \underline{subrayado}. En cambio sí se debe utilizar \textit{texto en itálicas} para palabras en un idioma extranjero, al menos la primera vez que aparecen en el texto. En el caso de palabras que estamos inventando se deben utilizar ``comillas'', así como también para citas textuales. Por ejemplo, un \textit{digital filter} es una especie de ``selector'' que permite separar ciertos componentes armónicos en particular.
 %
 %La escritura debe ser impersonal. Por ejemplo, no utilizar ``el diseño del firmware lo hice de acuerdo con tal principio'', sino ``el firmware fue diseñado utilizando tal principio''. 
