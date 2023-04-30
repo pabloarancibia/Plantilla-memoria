@@ -115,17 +115,39 @@ En la figura \ref{fig:diagramabbdd} se representa un diagrama UML de la base de 
 
 Para realizar el diseño de la base de datos se realizó un análisis de los requerimientos y los casos de usos o historias de usuario, a partir de esto se inició el diagrama con las tablas principales y sus relaciones, a medida que se avanzaba en el desarrollo de la API y del sistema  se fueron añadiendo nuevas tablas y relaciones segun las necesidades. 
 
-\begin{figure}[ht]
+\begin{figure}[h]
 	\centering
-	\includegraphics[scale=.25]{./Figures/diagramabbdd.png}
+	\includegraphics[scale=.15]{./Figures/diagramabbdd.png}
 	\caption{Diagrama de base de datos.}
 	\label{fig:diagramabbdd}
 \end{figure}
 
+\subsection{Estructura de archivos para ORM}
+\label{subsec:estructuraorm}
+Para el desarrollo de la base de datos se utilizó el ORM Sequelize. Como se menciona en el capítulo \ref{subsec:sequelize}, existen multiples ventajas al utilizar un ORM en vez de directamente programar la base de datos en lenguaje SQL, se tuvieron en cuenta esas ventajas a la hora de optar por realizar el desarrollo con este ORM. 
+
+La estructura de carpetas y archivos está definida previamente por el ORM pudiendo realizar algunas personalizaciones. 
+
+En la figura \ref{fig:estructuraorm} podemos ver la estructura implementada.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.50]{./Figures/estructuraorm.png}
+	\caption{Estructura de carpetas y archivos para ORM Sequelize.}
+	\label{fig:estructuraorm}
+\end{figure}
+
+Dentro de la carpeta \textit{config} se definen los archivos de configuración de Sequelize y el acceso a la base de datos MySQL.
+
+En la carpeta migrations, models y seeders se encuentran todos los archivos \textit{javascript} para las migraciones, los modelos y semillas, estos archivos se detallarán en las próximas seccciones. 
+
+El archivo .sequelizerc sirve para definir la ubicación de los modelos, migraciones, semillas y otros archivos generados por Sequelize.
+
+
 \subsection{Desarrollo de modelos y tablas}
 \label{subsec:modelobasededatos}
 
-Para el desarrollo de la base de datos se utilizó el ORM Sequelize. Como se menciona en el capítulo \ref{subsec:sequelize}, existen multiples ventajas al utilizar un ORM como Sequelize en vez de directamente programar la base de datos en lenguaje SQL, se tuvieron en cuenta esas ventajas a la hora de optar por realizar el desarrollo con este ORM. 
+
 
 A continuación se presentan algunos fragmentos de código fuente empleados para el desarrollo de la base de datos, siguiendo esta misma modalidad se realizaron todas las tablas de la base de datos, sus modificaciones y sus respectivas migraciones.
 
@@ -396,16 +418,140 @@ let orden = await OrdenTrabajo.findOne({
 Podemos observar que en la linea 3 se busca el registro mediante su id y se guarda el mismo en una variable, luego se utiliza esa variable para realizar la actualización de los datos, por lo que esa variable pasa a ser un ``objeto de Sequelize" que puede ser tratado directamente como entidad única de la base de datos, facilitando su uso mediante el ORM.
 
 
-\section{Arquitectura backend}
-\label{sec:arquitecturabackend}
+\section{Arquitectura API REST}
+\label{sec:arquitecturaapirest}
 
-\subsection{API REST}
-\label{subsec:apirest}
-La lógica del backend se centra principalmente en la API REST desarrollada, en la misma se utilizaron diferentes tecnologías cada una para un fin específico.
-Sequelize para la conexion, desarrollo e interacción con la base de datos
-Express JS para el ruteo
-Javascript para la lógica
-Node.Js como framework principal
+La lógica del backend se centra principalmente en la API REST desarrollada, en la misma se utilizaron diferentes tecnologías las cuales están descriptas en el capítulo \ref{sec:backend}.
+
+A continuación se detalla su desarrollo e implementación.
+
+\subsection{Patrón de desarrollo}
+\label{subsec:apipatron}
+
+Se implementó una arquitectura de software orientada a eventos, nativa de Node.js, y la organización modular del código también llamado \textit{``event-driven"}.
+
+En la organización modular se estructura el código de la aplicación en pequeñas piezas reutilizables. Esto hace que el código sea más fácil de mantener y actualizar a medida que la aplicación crece y evoluciona.
+
+En la figura \ref{fig:apiestructura} se presenta la estructura de carpetas utilizada siguiendo el modelo mencionado. 
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.50]{./Figures/api-estructura-archivos.png}
+	\caption{Estructura de carpetas en patrón de desarrollo modular.}
+	\label{fig:apiestructura}
+\end{figure}
+
+Dentro de cada una de las carpetas se encuentran los archivos \textit{javascript} correspondientes. El archivo \textit{server.js} es el punto de partida de la API y donde se realizan las configuraciones de conexión a bases de datos con Sequelize, configuración de Express, se definen los puertos a utilizar, la conexión MQTT, se declaran las rutas o \textit{routes}, entre otras configuraciones.
+
+En el archivo \textit{package.json} se encuentran configuraciones y datos fundamentales para la aplicación, entre estas están: el nombre de la aplicación, la versión, descripción del proyecto, los scripts de inicio y ejecución, las dependencias del proyecto, bibliotecas y paquetes de terceros utilizados, las versiones específicas de las dependencias requeridas y la información de licencia. En este archivo se define, por ejemplo, el uso de Sequelize y Express y sus respectivas versiones.
+
+El archivo .env es un archivo que no se versiona, esto significa que no se resguarda el historial de cambios del archivo, esto se debe a que contiene información sensible que debe mantenerse segura y no debe versionarse ni subirse a internet. En cada entorno dónde la aplicación sea instalada se deberá crear este archivo manualmente y escribir las definiciones de manera manual. Se declara, por ejemplo, usuario y contraseña para la conexión a base de datos, credenciales para conexión a \textit{broker} MQTT, direcciones IP o URL, conexión a Wi-Fi, entre otros datos sensibles.
+
+En las siguientes secciones se detallan las carpetas \textit{routers} y \textit{controllers}.
+
+\subsection{Ruteo de la API}
+\label{subsec:apirouters}
+
+En la carpeta \textit{routers} se encuentran los archivos \textit{javascript} que corresponden a las rutas que manejará Express para recibir las peticiones o \textit{requests} HTTP provenientes desde fuera de la API, generalmente desde el cliente \textit{frontend}.
+
+En la figura \ref{fig:apiroutes} se muetran los archivos de ruteo que se crearon siguiendo el patrón modular, separando las rutas según su entidad o funcionalidad.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.50]{./Figures/api-routes.png}
+	\caption{Estructura de archivos en carpeta de rutas.}
+	\label{fig:apiroutes}
+\end{figure}
+
+En el archivo \textit{ordentrabajoRouter.js} se manejan las peticiones a rutas referentes a las órdenes de trabajo, de la misma manera para los demás archivos. 
+
+A modo de ejemplo se representa un fragmento de código de ruteo correspondientes a órdenes de trabajo:
+
+
+\begin{lstlisting}[label=cod:routesot,caption=Código de ruteo para órdenes de trabajo.]
+    /**
+     * Nueva orden de trabajo
+     * @params data, estado = espera
+     * Recibe datos para la orden de trabajo
+     * incluido el numero de tarjeta rfid
+     */
+    ordentrabajoRouter.post('/nueva',
+        ordentrabajoCtrl.nuevaOrdenTrabajo);
+\end{lstlisting}
+
+En la declaración de esta ruta podemos observar que la dirección de la ruta en cuestión es \textit{/nueva} y se define con el método \textit{post()} en un objeto de router llamado \textit{ordentrabajoRouter}. Este método indica que la ruta es accesible mediante una solicitud HTTP POST, que es utilizada para enviar información a un servidor para crear un recurso.
+
+Además, se especifica un controlador de ruta \textit{(handler)}. El controlador es una función que se ejecuta cuando se realiza una solicitud HTTP a la ruta especificada. En este caso, el controlador de ruta se llama \textit{nuevaOrdenTrabajo} y se define en el archivo \textit{ordentrabajoCtrl}, más adelante veremos en profundidad la carpeta \textit{controllers} y sus características.
+
+Cuando se realiza una solicitud HTTP POST a la ruta \textit{/nueva}, Express ejecutará automáticamente la función \textit{nuevaOrdenTrabajo} definida en el controlador de ruta \textit{ordentrabajoCtrl}.
+
+De esta manera se logra separar la lógica de ruteo de la lógica de procesos y acceso a datos, siguiendo el patrón modular mencionado previamente.
+
+\subsection{Controladores de la API}
+\label{subsec:apicontrollers}
+
+Como se mencionó en la sección previa, los controladores son funciones que se ejecutan luego de resolver la ruta a la cual están asociados. 
+
+En la figura \ref{fig:apicontrollers} se puede ver como en la carpeta \textit{controllers} se definieron los controladores siguiendo el patrón modular de desarrollo, teniendo encuenta la entidad o la funcionalidad que se desea procesar.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.50]{./Figures/api-controllers.png}
+	\caption{Estructura de archivos en la carpeta \textit{controllers}.}
+	\label{fig:apicontrollers}
+	
+\end{figure}
+
+A modo de ejemplo se muestra a continuación un fragmento de código del controlador para obtener un listado de todas las motos de la base de datos:
+
+\begin{lstlisting}[label=cod:routesot,caption=Código de controlador para obtener listado de motos.]
+const {Moto} = require('../database/models/index');
+
+const { Op, Sequelize } = require("sequelize");
+const { response } = require('express');
+
+//controller
+const listarMoto = async (req, res)=>{
+    try {
+        const listadoMotos = await Moto.findAll({});
+        
+        return res.status(200).json({
+            listadoMotos
+        }); 
+
+    } catch (error) {
+        return res.status(400).json({
+            error: error.message,
+            message: 'Error listando motos'
+        })
+    }
+    
+};
+\end{lstlisting}
+
+La primera línea del código importa el modelo \textit{Moto} desde el archivo principal para los modelos de Sequelize \textit{index.js} ubicado en la carpeta \textit{models}. En la segunda línea, se importan las funciones \textit{Op y Sequelize} desde la librería Sequelize, estas funciones se utilizan para realizar operaciones y consultas en la base de datos. Luego, se define el controlador \textit{listarMoto} que se encarga de listar todas las motos de la base de datos. Dentro del controlador, se utiliza el método \textit{findAll()} de Sequelize para buscar todos los registros. Si la consulta a la base de datos se realiza con éxito, se devuelve un objeto \textit{JSON} con el listado de motos y un código de estado HTTP 200. En caso de que la consulta falle, se devuelve un objeto \textit{JSON} con el mensaje de error y un código de estado HTTP 400.
+
+Finalmente, se exporta el controlador \textit{listarMoto} para que pueda ser utilizado en otras partes de la aplicación.
+
+De manera similar se desarrollaron todos los controladores para las diferentes rutas de la aplicación. 
+
+\section{Arquitectura MQTT}
+\label{sec:mqttarquitectura}
+
+\subsection{Diagrama MQTT}
+\label{subsec:mqttdiagrama}
+
+\subsection{Topics MQTT}
+\label{subsec:mqtttopics}
+
+\subsection{Broker MQTT}
+\label{subsec:mqttbroker}
+
+\subsection{MQTT en nodos}
+\label{subsec:mqttnodos}
+
+\subsection{MQTT en API REST}
+\label{subsec:mqttapi}
 
 % La idea de esta sección es resaltar los problemas encontrados, los criterios utilizados y la justificación de las decisiones que se hayan tomado.
 
