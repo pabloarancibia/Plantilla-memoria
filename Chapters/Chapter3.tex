@@ -752,7 +752,7 @@ Para el desarrollo de las interfaces de usuario se utilizó el framework Ionic \
 
 Se implementó el patrón de diseño MVC \citep{mvc} \textit{(Modelo-Vista-Controlador)} para estructurar la aplicaciones web. Este patrón divide la aplicación en tres capas principales: el modelo, el cual representa los datos y la lógica de negocio, la vista, que representa las interfaces de usuario, y el controlador, que actúa como intermediario entre la vista y el modelo.
 
-También se hizo uso de otros patrones de diseño, como el patrón de ``Inyección de Dependencias`` \citep{dependency-injection} \textit{Dependency Injection Pattern} y el patrón de ``Observador`` \citep{observer-pattern} \textit{Observer Pattern}. Estos patrones son utilizados para mejorar la escalabilidad, la flexibilidad y la mantenibilidad de las aplicaciones desarrolladas con Ionic.
+También se utilizaron otros patrones de diseño, como el patrón de ``Inyección de Dependencias`` \citep{dependency-injection} \textit{Dependency Injection Pattern} y el patrón de ``Observador`` \citep{observer-pattern} \textit{Observer Pattern}. Estos patrones son utilizados para mejorar la escalabilidad, la flexibilidad y la mantenibilidad de las aplicaciones desarrolladas con Ionic.
 
 En la capa de la vista se utilizaron las páginas, componentes y módulos de Ionic. Las páginas son plantillas en HTML o lenguaje IONIC. Los componentes son elementos visuales que se desarrollan en lenguajes HTML, CSS y Javascript y son implementados en las páginas. Los módulos son grupos de páginas y componentes. 
 
@@ -760,25 +760,341 @@ En la capa de controlador se utilizó un archivo Javascript con las funciones y 
 
 En la capa de modelo se implementaron los servicios de Ionic, estos son clases que contienen métodos y lógica de negocio para recuperar datos de la API. 
 
-Además se utilizó el manejo de rutas para mapear las URL a las páginas. Se asignó a cada módulo un archivo de rutas independiente para el manejo fluido de las mismas.
+Además se utilizó el manejo de rutas para mapear las URL a las páginas. Se asignó a cada módulo un archivo de rutas independiente para el manejo fluido de las páginas.
 
-A continuación se representa un ejemplo para el desarrollo del módulo de listar órdenes de trabajo implementando este patrón:
+En la figura \ref{fig:frontmvc} podemos observar una representación del flujo utilizando este patrón. 
 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.15]{./Figures/front-mvc.png}
+	\caption{Flujo en MVC.}
+	\label{fig:frontmvc}
+\end{figure}
 
+Por ejemplo, para el desarrollo del módulo de listar órdenes de trabajo implementando este patrón, el flujo sería el siguiente:
+
+\begin{enumerate}
+\item Usuario solicita a traves de su navegador la URL \textit{ordenestrabajo/listar}.
+\item El \textit{routing} mapea la URL al controlador \textit{listar.page.ts} que se encuentra en el módulo \textit{listar.module.ts}. El controlador llama al servicio \textit{ordentrabajo.services.ts}.
+\item El servicio hace una petición HTTP por medio del método GET a una ruta de la API de \textit{backend}. 
+\item La API responde con los datos de la lista en formato JSON.
+\item El servicio entrega esos datos al controlador en formato JSON.
+\item El controlador procesa los datos, realiza validaciones y filtros necesarios, ordena los datos, etc.
+\item La vista procesa los datos, los inserta en una tabla, aplica los diseños CSS, etc. Luego envía la vista con los datos al usuario quien la visualizará en su navegador. 
+\end{enumerate}
+
+De esta manera se implementó este patrón de desarrollo para todos los componentes y módulos del \textit{frontend}.
 
 \subsection{Interfaces de usuario}
 \label{subsec:frontinterfaces}
 
+Teniendo en cuenta el flujo general del sistema presentado en el caítulo \ref{sec:flujogeneral} y los requerimientos para un sistema que sea amigable con el usuario y de diseño adaptable a diferentes dispositivos, se desarrollarón las interfaces de usuario utilizando los componentes nativos de Ionic para diseño de interfaces junto a CSS para personalizar estilos y javascript para funcionalidades. 
+
+Las interfaces de usuario que se desarrollaron fueron:
+
+\begin{enumerate}
+\item Nueva: para añadir una nueva órden de trabajo.
+\item Listar: para listar todas las órdenes de trabajo.
+\item Retirar: para retirar una órden de trabajo.
+\item Clientes: de tipo modal, para añadir o buscar un cliente.
+\item Motos: de tipo modal, para añadir o buscar una motocicleta.
+\item QR: para mostrar el código QR para autenticación en \textit{Whatsapp}.
+\end{enumerate}
+
+\subsubsection{Nueva órden de trabajo}
+\label{subsubsec:frontnuevaorden}
+En la figura \ref{fig:nuevafull1} podemos observar los primeros campos del formulario a rellenar para cargar una nueva órden de trabajo.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/nueva-full-1.png}
+	\caption{Interfaz de usuario para nueva órden de trabajo.}
+	\label{fig:nuevafull1}
+\end{figure}
 
 
+El usuario deberá hacer clic en el botón ``LEER TARJETA`` y luego pasar la tarjeta RFID por el lector ``mostrador``. De esta manera el sistema trae el número de tarjeta que fue seleccionada para asignar a la órden. Luego deberá cargar, si existe, un número de órden de manera manual el cual corresponde a un \textit{ticket} que usa actualmente la empresa.
+
+Para cargar el tipo de trabajo, datos del cliente y la motocicleta se utilizan interfaces de tipo modal, las cuales se presentan a continuación:
+
+En la figura \ref{fig:nuevatrabajo} se presenta la interfaz de tipo modal para seleccionar el tipo de trabajo a asignar a la órden.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/nueva-trabajo.png}
+	\caption{Interfaz de usuario de tipo modal para seleccionar tipo de trabajo.}
+	\label{fig:nuevatrabajo}
+\end{figure}
+
+Para cargar o buscar los datos de clientes se utilizó el mismo componente, reutilizando así parte del código fuente. Como podemos ver en las figuras \ref{fig:nuevacliente1} y \ref{fig:nuevacliente2}, también se usa el tipo de interfaz modal.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/nueva-clientes-1.png}
+	\caption{Interfaz de usuario de tipo modal para seleccionar o buscar cliente.}
+	\label{fig:nuevacliente1}
+\end{figure}
+
+En la figura \ref{fig:nuevacliente2} podemos observar el resultado de una búsqueda de clientes. Se selecciona el que se desea asignar y se hace click en ``CONFIRMAR``.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/nueva-clientes-2.png}
+	\caption{Interfaz de usuario de tipo modal con el resultado de búsqueda de clientes.}
+	\label{fig:nuevacliente2}
+\end{figure}
+
+De la misma manera se puede seleccionar o crear un registro de datos de una nueva motocicleta para asignar a la órden. En las figuras \ref{fig:nuevamoto1} y \ref{fig:nuevamoto2} vemos las interfaces modales.
 
 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/nueva-moto-1.png}
+	\caption{Interfaz de usuario de tipo modal para seleccionar o buscar motocicleta.}
+	\label{fig:nuevamoto1}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/nueva-moto-2.png}
+	\caption{Interfaz de usuario de tipo modal con el resultado de búsqueda de motocicletas.}
+	\label{fig:nuevamoto2}
+\end{figure}
+
+Volviendo a la segunda sección del formulario para agregar una nueva órden, ya habiendo cargado el número de tarjeta, el tipo de trabajo, el cliente y la motocicleta, continuamos con los campos que se representan en la figura \ref{fig:nuevafull2}.
+
+ 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/nueva-full-2.png}
+	\caption{Interfaz de usuario para nueva órden de trabajo.}
+	\label{fig:nuevafull2}
+\end{figure}
+
+En esta sección podemos agregar detalles, costos y fecha de entrega estimada.
+
+\begin{itemize}
+\item Detalles: para agregar algunas observaciones a la órden en formato de texto
+Costos: están separados en 3 campos: el precio total de la órden, la entrega que realiza el cliente cuando deja el repuesto y el saldo restante. 
+\item Fecha de entrega estimada: al seleccionar la fecha saldrá un calendario de tipo modal para seleccionar el día y la hora de entrega. 
+\end{itemize}
 
 
+Por último sólo queda guardar la órden, para ello se pueden realizar dos acciones: 
+
+\begin{itemize}
+\item GUARDAR Y LIMPIAR: esta opción se utilizará cuando el cliente sólo deje un repuesto para trabajar de manera tal que se guarda el registro y se limpia completamente el formulario
+
+\item GUARDAR Y SEGUIR AÑADIENDO: cuando el mismo cliente tiene varios repuestos para dejar, de esta manera se guarda el registro pero se mantienen los datos del cliente en el formulario. 
+\end{itemize}
+
+La última opción corresponde a ``LIMPIAR FORMULARIO`` que borra los datos del formulario sin guardar ningún registro.
 
 
+\subsubsection{Listar órdenes de trabajo}
+\label{subsubsec:frontlistarordenes}
 
+En la figura \ref{fig:listado1} podemos observar la interfaz gráfica para donde se listan las órdenes de trabajo según las opciones seleccionadas.
 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/listado-1.png}
+	\caption{Interfaz de usuario para listar las órdenes de trabajo.}
+	\label{fig:listado1}
+\end{figure}
+
+Las opciones en esta interfaz son:
+
+\begin{itemize}
+\item Filtrado: se puede filtrar por cualquier campo de la tabla, una vez que se filtran los resultados, la información se sigue actualizando en tiempo real, por lo que si una fila cambia de estado, se verá de todas maneras el cambio.
+
+\item Rango de días: en la parte superior de la tabla se pueden observar 5 botones, estos representan al rango de días hacia atrás que se desea mostrar los registros. Además la tabla muestra al usuario una paginación navegable en la parte inferior si los registros son mayores a 25. El último botón de este grupo corresponde a mostrar el historial completo de registros.
+
+\item Ordenamiento por campos: al hacer clic en la cabecera de la tabla se puede ordenar los elementos de manera múltiple, por ejemplo en primer órden la fecha de entrega y en segundo órden el apellido del cliente, así susesivamente en múltiples campos.
+
+\item Orden de columnas: se pueden ordenar los campos haciendo clic y arrastrando el campo deseado al órden correspondiente. Por ejemplo se puede arrastrar el campo ``Estado`` en la primer columna.
+\end{itemize}
+
+Para una mejor visualización de los estados de los trabajos se asignó un color específico para cada estado, de esta manera es más fácil identificar rápidamente el estado de los trabajos. Se utilizó la siguiente paleta de colores para los estados:
+
+\begin{itemize}
+\item Espera: color verde.
+\item Proceso: color púrpura.
+\item Finalizado: color verde brillante o verde opaco.
+\item Retirado: color gris. 
+\end{itemize} 
+
+Además se asigna un botón en la columna ``Mensaje``, solamente a las filas de los trabajos que están en estado ``FINALIZADO``. Este botón tiene el logo de la aplicación \textit{WhatsApp} y se utiliza para enviar un mensaje al cliente informando que su trabajo está finalizado y listo para retirarse. En caso que el cliente todavía no fue alertado el color de la fila será verde brillante, si el cliente ya fue avisado el color de la fila será verde opaco. El usuario puede reenviar un mensaje a un cliente si lo desea sólo que el sistema lo alertará previamente.
+
+En las figuras \ref{fig:listado2} y \ref{fig:listado3} vemos los alertas de tipo modal que se utilizan para confirmar cuando el usuario va a enviar o reenviar un mensaje a un cliente.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/listado-2.png}
+	\caption{Confirmar envío de mensaje de texto al cliente.}
+	\label{fig:listado2}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/listado-3.png}
+	\caption{Confirmar reenvío de mensaje de texto al cliente.}
+	\label{fig:listado3}
+\end{figure}
+
+Como se detalló en el caítulo \ref{sec:apimessenger} el mensaje llegá al cliente en su aplicación \textit{WhatsApp} como si fuera enviado desde el teléfono móvil del usuario, por lo que mostrará su número o el nombre por el cual el cliente lo tenga agendado, ya que la API de mensajería utiliza los servicios de \textit{WhatsApp} para hacer el envío y el usuario debe autenticarse previamente con su teléfono móvil y el código QR para utilizar el servicio.
+
+\subsubsection{Retirar órden de trabajo}
+\label{subsubsec:frontretirar}
+
+Para retirar una órden se utiliza una metodología similar a la de agregar una nueva órden de trabajo. El usuario va hacer clic en un botón para activar la búsqueda de un evento, este evento será pasar la tarjeta RFID del repuesto por el nodo mostrador, una vez hecho esto el número de la tarjeta con todos los datos de la órden se cargará en la pantalla. 
+
+El usuario puede modificar el precio de la órden en este punto y se actualizarán los datos de saldo. También puede agregar detalles para el retiro de la órden que quedarán registrados en la base de datos.
+
+Una vez confirmado el retiro se guradan los registros y estados correspondientes y se asigna el estado ``libre`` a la tarjeta para que pueda ser reutilizada para una futura órden de trabajo.
+
+De esta manera finaliza el ciclo de un repuesto que ingresa a la empresa, es procesado y retirado luego por el cliente.
+
+En las figuras \ref{fig:retirar1} y \ref{fig:retirar2} vemos la interfaz para retirar una órden de trabajo.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/retirar-1.png}
+	\caption{Formulario para retirar órden de trabajo.}
+	\label{fig:retirar1}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/retirar-2.png}
+	\caption{Confirmar retiro de órden de trabajo.}
+	\label{fig:retirar2}
+\end{figure}
+
+\subsubsection{Autenticación a API de mensajería}
+\label{subsubsec:frontqr}
+
+Para la autenticación a la API de mensajería se utiliza un código QR que se obtiene consultando dicha API por protocolo HTTP. La misma devuelve un archivo SVG que se muestra en la interfaz gráfica del usuario para que pueda ser escaneada por su teléfono móvil y de esta manera acceder a las funciones de envío de mensajes a clientes.
+
+En la figura \ref{fig:frontqr} podemos ver la interfaz para autenticarse mediante código QR. También se puede observar el botón ``ACTUALIZAR`` para refrescar el código por uno nuevo´.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/qr-page.png}
+	\caption{Interfaz para autenticación en API de mensajería.}
+	\label{fig:frontqr}
+\end{figure}
+
+\section{Arquitectura de servidor}
+\label{sec:server}
+
+Para el despliegue de los servicios desarrollados se implementó una arquitectura de contenedores utilizando Docker y Docker Compose en una Raspberry Pi 4.
+
+Para cada proyecto se creo un archivo Dockerfile para el manejo del contenedor correspondiente, a su vez se centraliza el despliegue de estos contenedores en un archivo \textit{yml} de Docker Compose, donde también se levantan servicios directamente sin utilizar un Dockerfile particular. 
+
+En esta sección se detalla la implementación de contenedores y servicios en el servidor.
+
+\subsection{Implementación de contenedores}
+\label{subsec:contenedores}
+
+A continuación se representa el código fuente utilizado en Docker Compose para el despliegue de todos los contenedores de cada proyecto o servicio utilizado:
+
+\begin{lstlisting}[label=cod:dockercompose,caption=Código de Docker Compose.]
+version: '3'
+
+services:
+    db:
+        container_name: mysqldb
+        restart: always
+        image: mysql
+        env_file:
+        - .env_mysql/.mysql.env
+        volumes:
+            - ./sql-data/db:/var/lib/mysql
+        ports: 
+            - "3306:3306"
+    api:
+         depends_on: 
+             - db 
+         container_name: backendapi
+         restart: always
+         build:
+             context: .
+             dockerfile: Dockerfile
+         command: bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; npm run dev'
+         ports:
+             - "3001:3001"
+         env_file:
+         - ./api/.env
+         volumes:
+             - ./:/app
+    mosquitto:
+        image: eclipse-mosquitto
+        container_name: mosquittobroker
+        ports:
+            - "1883:1883"
+            - "9001:9001"
+        volumes:
+        - './mqtt/etc/mosquitto.conf:/mosquitto/config/mosquitto.conf'
+        - './mqtt/etc/mqttusers:/mosquitto/config/mqttusers'
+        - './mqtt/data:/mosquitto/data'
+        - './mqtt/log:/mosquitto/log'
+        restart: always
+    web:
+        container_name: web
+        restart: always
+        build:
+            context: .
+            dockerfile: Dockerfile-frontend
+        ports:
+            - "80:80"
+    messenger:
+         container_name: messenger
+         restart: always
+         build:
+             context: api-whatsapp-ts
+             dockerfile: Dockerfile
+         ports:
+             - "3003:3003"
+         volumes:
+             - ./:/messenger
+    portainer:
+        image: portainer/portainer-ce
+        restart: always
+        ports:
+            - "9000:9000"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - portainer_data:/data
+volumes:
+    portainer_data:
+\end{lstlisting}  
+
+A continuación se describen cada uno de los servicios para la aplicación:
+
+\begin{itemize}
+
+\item db: este servicio utiliza la imagen de Docker para crear un contenedor de base de datos MySQL. Se le asigna un nombre de contenedor \textit{mysqldb}, se establece una opción de reinicio siempre que se detiene, se define un archivo .env para configurar las variables de entorno, se mapea un volumen local a la ruta de datos de MySQL y se expone el puerto 3306.
+
+\item api: este servicio es la API de la aplicación para el \textit{backend}. Su ejecución depende del servicio de la base de datos \textit{db} y utiliza un archivo .env para configurar las variables de entorno. Se construye a partir de un archivo Dockerfile. Se mapea al puerto 3001.
+
+\item mosquitto: este servicio utiliza la imagen de Docker \textit{eclipse-mosquitto} para crear un contenedor de un servidor MQTT. Se le asigna un nombre de contenedor \textit{mosquittobroker}, se expone los puertos 1883 y 9001, se mapea la configuración y los datos de MQTT a un volumen local y se establece una opción de reinicio siempre que se detiene.
+
+\item web: este servicio es la interfaz \textit{web} de la aplicación la cual utiliza NGINX para servir la aplicación desarrollada en IONIC. Se construye a partir de un archivo Dockerfile en el directorio actual y se mapea el puerto 80.
+
+\item messenger: este servicio utiliza un archivo Dockerfile en el directorio de la API de mensajería para crear un contenedor y servir la API. Se le asigna un nombre de contenedor \textit{messenger} y se mapea al puerto 3003.
+
+\item portainer: este servicio utiliza la imagen de Docker \textit{portainer/portainer-ce} para crear un contenedor del administrador de Docker \textit{Portainer}. Se mapea el puerto 9000 y se utiliza un volumen para almacenar los datos.
+\end{itemize}
+
+Al desplegar Docker Compose se levantan todos los servicios como se muestra en la figura \ref{fig:docker-interfaz}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.60]{./Figures/docker-interfaz.png}
+	\caption{Contenedores de Docker.}
+	\label{fig:docker-interfaz}
+\end{figure}
 
 
 
