@@ -139,7 +139,7 @@ En la figura \ref{fig:estructuraorm} podemos ver la estructura implementada.
 
 Dentro de la carpeta \textit{config} se definen los archivos de configuración de Sequelize y el acceso a la base de datos MySQL.
 
-En la carpeta migrations, models y seeders se encuentran todos los archivos \textit{javascript} para las migraciones, los modelos y semillas, estos archivos se detallarán en las próximas seccciones. 
+En la carpeta migrations, models y seeders se encuentran todos los archivos Javascript para las migraciones, los modelos y semillas, estos archivos se detallarán en las próximas seccciones. 
 
 El archivo .sequelizerc sirve para definir la ubicación de los modelos, migraciones, semillas y otros archivos generados por Sequelize.
 
@@ -340,7 +340,7 @@ Otra de las particularidades principales del archivo de migración es que contie
 
 En Sequelize se pueden realizar todas las funciones necesarias para interactuar con la base de datos, ya sea para insertar, actualizar o eliminar registros, como así también los métodos para leer registros utilizando filtros o condiciones particulares.
 
-A continuación se representan a modo de ejemplo algunos fragmentos de código \textit{javascript} empleados para tal fin:
+A continuación se representan a modo de ejemplo algunos fragmentos de código Javascript empleados para tal fin:
 
 Código para traer todas las órdenes de trabajo existentes, incluyendo otros modelos relacionados a este:
 
@@ -418,7 +418,7 @@ let orden = await OrdenTrabajo.findOne({
 Podemos observar que en la linea 3 se busca el registro mediante su id y se guarda el mismo en una variable, luego se utiliza esa variable para realizar la actualización de los datos, por lo que esa variable pasa a ser un ``objeto de Sequelize" que puede ser tratado directamente como entidad única de la base de datos, facilitando su uso mediante el ORM.
 
 
-\section{Arquitectura API REST}
+\section{Desarrollo API REST}
 \label{sec:arquitecturaapirest}
 
 La lógica del backend se centra principalmente en la API REST desarrollada, en la misma se utilizaron diferentes tecnologías las cuales están descriptas en el capítulo \ref{sec:backend}.
@@ -441,7 +441,7 @@ En la figura \ref{fig:apiestructura} se presenta la estructura de carpetas utili
 	\label{fig:apiestructura}
 \end{figure}
 
-Dentro de cada una de las carpetas se encuentran los archivos \textit{javascript} correspondientes. El archivo \textit{server.js} es el punto de partida de la API y donde se realizan las configuraciones de conexión a bases de datos con Sequelize, configuración de Express, se definen los puertos a utilizar, la conexión MQTT, se declaran las rutas o \textit{routes}, entre otras configuraciones.
+Dentro de cada una de las carpetas se encuentran los archivos Javascript correspondientes. El archivo \textit{server.js} es el punto de partida de la API y donde se realizan las configuraciones de conexión a bases de datos con Sequelize, configuración de Express, se definen los puertos a utilizar, la conexión MQTT, se declaran las rutas o \textit{routes}, entre otras configuraciones.
 
 En el archivo \textit{package.json} se encuentran configuraciones y datos fundamentales para la aplicación, entre estas están: el nombre de la aplicación, la versión, descripción del proyecto, los scripts de inicio y ejecución, las dependencias del proyecto, bibliotecas y paquetes de terceros utilizados, las versiones específicas de las dependencias requeridas y la información de licencia. En este archivo se define, por ejemplo, el uso de Sequelize y Express y sus respectivas versiones.
 
@@ -452,7 +452,7 @@ En las siguientes secciones se detallan las carpetas \textit{routers} y \textit{
 \subsection{Ruteo de la API}
 \label{subsec:apirouters}
 
-En la carpeta \textit{routers} se encuentran los archivos \textit{javascript} que corresponden a las rutas que manejará Express para recibir las peticiones o \textit{requests} HTTP provenientes desde fuera de la API, generalmente desde el cliente \textit{frontend}.
+En la carpeta \textit{routers} se encuentran los archivos Javascript que corresponden a las rutas que manejará Express para recibir las peticiones o \textit{requests} HTTP provenientes desde fuera de la API, generalmente desde el cliente \textit{frontend}.
 
 En la figura \ref{fig:apiroutes} se muetran los archivos de ruteo que se crearon siguiendo el patrón modular, separando las rutas según su entidad o funcionalidad.
 
@@ -535,23 +535,253 @@ Finalmente, se exporta el controlador \textit{listarMoto} para que pueda ser uti
 
 De manera similar se desarrollaron todos los controladores para las diferentes rutas de la aplicación. 
 
-\section{Arquitectura MQTT}
+\subsection{Endpoints HTTP}
+\label{subsec:apiendpointshttp}
+
+Para la organización del desarrollo se realizó una tabla con todos los datos necesarios para los \textit{endpoints} o rutas de la API. 
+
+En la figura \ref{fig:apiendpoints} se puede apreciar una parte de esta tabla correspondiente a las rutas para las órdenes de trabajo.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.40]{./Figures/api-endpoints.png}
+	\caption{Tabla descriptiva de \textit{endpoints} o rutas de la API.}
+	\label{fig:apiendpoints}
+	
+\end{figure}
+
+A medida que se avanzó en el desarrollo se fueron marcando en verde las casillas de las rutas finalizadas, además se fue agregando más detalles o parámetros según requerimientos o necesidades.
+
+\section{Comunicación MQTT}
 \label{sec:mqttarquitectura}
+
 
 \subsection{Diagrama MQTT}
 \label{subsec:mqttdiagrama}
 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.25]{./Figures/mqtt-funciones.png}
+	\caption{Diagrama de funciones MQTT.}
+	\label{fig:mqttfunciones}
+	
+\end{figure}
+
+En la figura \ref{fig:mqttfunciones} se pueden apreciar los distintos actores que intervienen en la comunicación MQTT del sistema. Los nodos RFID representan a cada ESP32 con el módulo lector RC522 mencionados en el capítulo \ref{subsec:esp32}, estos se encargan de marcar el estado específico de una órden de trabajo. En el centro se ubica el broker Mosquitto el cual se encarga de la distribución de los mensajes a los demás módulos y a la derecha está la API REST desarrollada en Node.js la cual recibe los mensajes provenientes de los nodos y realiza el proceso correspondiente, además de enviar publicaciones a modo de información y para \textit{logs}.
+
 \subsection{Topics MQTT}
 \label{subsec:mqtttopics}
+
+Como se observa en la figura \ref{fig:mqtttopics}, se organizan los \textit{topics} MQTT en una tabla, en este caso, según el nodo o sensor y podemos ver en la cabecera de la tabla la información que representaremos para cada mensaje, el \textit{topic}, si es una publicación o subscripción, el mensaje en cuestión y una breve explicación de cual es la función que cumple la comunicación.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.30]{./Figures/mqtt-topics.png}
+	\caption{Tabla de \textit{topics} MQTT.}
+	\label{fig:mqtttopics}
+	
+\end{figure}
 
 \subsection{Broker MQTT}
 \label{subsec:mqttbroker}
 
+Para la implementación en el servidor del sistema en la Raspberry Pi del \textit{broker} MQTT ``Eclipse Mosquitto" se utilizó un servicio de Docker Compose el cual permite levantar el \textit{broker} y sus configuraciónes.
+
+En la figura \ref{fig:mqttestructuracarpetas} podemos observar la estructura de carpetas y archivos que se implementa en el contenedor de Docker para este servicio. 
+
+\begin{itemize}
+	\item En la carpeta \textit{data} se encuentra el archivo de base de datos \textit{mosquitto.db} donde se pueden persistir los mensajes MQTT según la configuración de persistencia implementada.
+	\item En la carpeta \textit{etc} se encuentra el archivo de configuración principal del \textit{broker}: \textit{mosquitto.conf}, aquí se declaran todos los parámetros con los cuales Docker Compose levantará el servicio. El archivo \textit{mqttusers} persiste de manera encriptada las credenciales de acceso para los clientes MQTT, estos usuarios son administrados por linea de comando en la terminal \textit{bash} ingresando al contenedor específico. Por último se agregó un archivo con el ejemplo de comandos para administrar usuarios: \textit{mqttusers.example}.
+	\item La carpeta \textit{log} contiene el archivo \textit{mosquitto.log} donde se registran todos los logs del servicio y que sirven para hacer un \textit{debug} o \textit{test} del mismo.	
+\end{itemize}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.60]{./Figures/mqtt-estructura-carpetas.png}
+	\caption{Estructura de carpetas del servicio Ecplipse Mosquitto en Docker.}
+	\label{fig:mqttestructuracarpetas}
+\end{figure}
+
 \subsection{MQTT en nodos}
 \label{subsec:mqttnodos}
+Para implementar las comunicaciones MQTT en los nodos ESP32 se utilizó la biblioteca de código abierto PubSubClient \citep{WEBSITE:pubsubclient} la cual permite conexiones con servidores MQTT, publicar mensajes y suscribirse a los mensajes recibidos.
+
+Como se describió en el capítulo \ref{Chapter1} Cada nodo representa uno o más estados específicos en la cadena de procesos que se realizan en la empresa. Estos estados son declarados en el código fuente del microcontrolador ESP32, específicamente en un archivo de entorno, de manera que pueda ser modificado fácilmente en caso de ser necesario.
+
+A continuación se describen los nodos y sus estados utilizados:
+
+\begin{itemize}
+\item Nodo 1, ``mostrador``: este nodo cumple la función comunicar a la API REST por medio de MQTT el número de tarjeta que ha sido leída en el mostrador de atención a clientes de la empresa. De esta manera la API REST se encargará de asignar los estados ``espera`` o ``retirado`` a las órdenes de trabajo según corresponda.
+
+\item Nodo 2, ``proceso``: este nodo se encarga de comunicar a la API REST que debe cambiar el estado de la órden de trabajo a ``proceso``, la API REST reconoce que el mensaje proviene de este nodo por el ``topic`` por el cual se envía el mensaje, y consulta a la base de datos qué órden de trabajo tiene el número de tarjeta recibida para ejecutar la actualización.
+
+\item Nodo 3, ``finalizado``: de la misma manera que en el nodo 2, en este sensor se informa a la API REST que debe cambiar el estado de la órden de trabajo asociada a la tarjeta leída a ``finalizado``.
+\end{itemize}
+
+De esta manera el ciclo de lecturas de los nodos para una órden de trabajo es el siguiente: 
+
+\begin{enumerate}
+\item Nodo ``mostrador``, se asigna el estado ``espera``.
+\item Nodo ``proceso``, se asigna el estado ``proceso``.
+\item Nodo ``finalizado``, se asigna el estado ``finalizado``.
+\item Nodo ``mostrador``, se asigna el estado ``retirado``.
+\end{enumerate}
+
+
 
 \subsection{MQTT en API REST}
 \label{subsec:mqttapi}
+
+Se definió en la estructura de la API REST, descripta en el capítulo \ref{subsec:apipatron}, una sóla ruta de entrada en el archivo principal de configuración \textit{server.js}, dónde se realiza la conexión al \textit{broker} MQTT y se subscribe a todos los \textit{topics} utilizando para ello el símbolo \#. 
+
+Configuración y conexión a \textit{broker} MQTT:
+\begin{lstlisting}[label=cod:mqttapiconect,caption= Configuración y conexión a \textit{broker} MQTT en API REST.]
+ // mqtt config
+    const mqtt = require('mqtt')
+    const host = process.env.MQTT_SERVER
+    const port = process.env.MQTT_PORT
+    const clientId = `api_mqtt_${Math.random().toString(16).slice(3)}`
+    
+    // mqtt connect function
+    const connectUrl = `mqtt://${host}:${port}`
+    const mqtt_client = mqtt.connect(connectUrl, {
+      clientId,
+      clean: true,
+      connectTimeout: 4000,
+      username: process.env.MQTT_USER,
+      password: process.env.MQTT_PASSWORD,
+      reconnectPeriod: 3000,
+    })
+\end{lstlisting}
+
+Como se puede observar en el código \ref{cod:mqttapiconect} se traen la mayoría de los parámetros desde las variables de entorno, esto se realiza para mantener un código limpio y que sea fácil de mantener, en caso de requerir algún cambio se realiza directamente en el archivo de variables de entorno evitando tener que cambiar en varias partes del código.
+
+Primero se importa la librería MQTT y se definen las variables correspondientes al \textit{host} y puerto del \textit{broker}, así como un \textit{clientId} generado aleatoriamente. Luego se define la función de conexión al \textit{broker}, utilizando la URL compuesta por el \textit{host} y \textit{puerto} definidos anteriormente, y se especifican las opciones de conexión, incluyendo el \textit{clientId} generado, la limpieza de sesión en la conexión, un tiempo de espera de conexión de 4 segundos, el nombre de usuario y contraseña para la conexión, y un período de reconexión de 3 segundos.
+
+
+Subscripción a todos los \textit{topics}:
+
+\begin{lstlisting}[label=cod:mqttapisub,caption=Subscripción a \textit{topics} en API REST.]
+// subscribe to topics
+    const topic = process.env.MQTT_TOPIC_ALL;
+    mqtt_client.on('connect', () => {
+      console.log('mqtt client Connected')
+      mqtt_client.subscribe([topic], () => {
+        console.log(`API Subscribe to topic '${topic}'`)
+      })
+    })
+\end{lstlisting}
+
+En el código \ref{cod:mqttapisub}, en la linea 2 se trae desde las variables de entorno el \textit{topic} correspondiente. Luego se inicia la conexión con el método \textit{on} y se realiza la subscripción con el método \textit{subscribe}. 
+
+Luego los mensajes se rutean a un controlador MQTT que procesa todos los mensajes y siguiendo un flujo condicional realiza las acciones correspondientes.
+
+A continuación se presenta un diagrama del flujo del código fuente para resolver los procesos según el mensaje MQTT recibido:
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.50]{./Figures/mqtt-controller-api.png}
+	\caption{Flujo de código fuente para MQTT en API REST.}
+	\label{fig:mqttcontrollerapi}
+\end{figure}
+
+Como puede observarse en la figura \ref{fig:mqttcontrollerapi} las validaciones dependen tanto del \textit{topic} recibido como del estado de la tarjeta. De acuerdo a eso se realizan los procesos correspondientes y se devuelve siempre un mensaje MQTT al nodo emisor el cual, de acuerdo al mensaje recibido, emitira una señal sonora a travez del \textit{buzzer} para informar al usuario si la acción tuvo éxito o no.
+
+En la figura \ref{fig:mqttsonidosnodos} se puede observar como se implementaron las señales sonoras en los nodos para informar al usuario sobre el estado de procesosy errores. Además podemos ver que existen dos opciones de sonidos, una es en forma de una sola nota denominada en la tabla \textit{Sonidos Clásicos} y otra es en forma de una melodía conocida denominada \textit{Melodías}. Se configura en cada nodo la opción deseada desde las variables de entorno. Además se realiza en el código una validación para asegurarse que el tipo de \textit{buzzer} instalado es compatible con la opción \textit{Melodía}, en caso que no lo sea se ejecuta directamente la opción \textit{Sonidos Clásicos}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.40]{./Figures/mqtt-sonidos-nodos.png}
+	\caption{Tabla de detalles de sonidos de nodos.}
+	\label{fig:mqttsonidosnodos}
+\end{figure}
+
+
+\section{API para mensajería}
+\label{sec:apimessenger}
+
+Para el envío de mensajes por la aplicación \textit{WhatsApp} \cite{whatsapp} se utilizó una API adicional \cite{api-whatsapp-ts} la cual fue personalizada para las necesidades de este sistema.
+
+En esta sección se detalla como se implementó una API de mensajería para \textit{WhatsApp}.
+
+Esta API permite al usuario de la aplicación conectarse a \textit{WhatsApp} con su teléfono móvil y enviar mensajes desde la aplicación a los clientes de manera automática.
+
+\subsection{Implementación}
+\label{subsec:apimessengerimplementación}
+
+Para implementar está API se creo un conenedor en Docker de manera tal de separar este servicio del resto de los demás siguiendo una arquitectura de tipo microservicios \cite{microservices-docs}.
+
+El patrón de desarrollo es similar al de la API REST detallada en el capitulo \ref{sec:arquitecturaapirest} y también está desarrollada en Node.js y Express, por lo que su personalización fue sensilla para este trabajo.
+
+Se modificó el código fuente de la API para poder autenticarse desde el frontend al servicio de \textit{WhatsApp}, haciendo que el frontend pueda realizar una petición por medio del protocolo HTTP y que la API devuelva un código QR \cite{qr-code} en formato SGV \cite{svg-format} para que el usuario pueda realizar la conexión. 
+
+En el ruteo del proyecto se añadió un endpoint para obtener un codigo QR de autenticación:
+
+\begin{lstlisting}[label=cod:apimessengerroute,caption=Endpoint para obtener código QR.]
+router.get("/", leadCtrl.getQrCode);
+router.get("/regenerateqr", leadCtrl.regenerateQrCode);
+\end{lstlisting}
+
+Luego en el controlador se realiza la lógica correspondiente:
+
+\begin{lstlisting}[label=cod:apimessengercontroller,caption=Controlador de ruta para obtener código QR.]
+  public getQrCode = async(req: Request,res: Response)=>{
+    const path = `${process.cwd()}/tmp`;
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.sendFile(`${path}/qr.svg`);
+  }
+
+  public regenerateQrCode = async(req: Request,res: Response)=>{
+    console.log("logout test");
+    const response = await this.leadCreator.logoutSrv();
+    res.send(response);
+  }
+\end{lstlisting}
+
+La primera función, llamada \textit{getQrCode}, es un controlador que se encarga de mostrar el código QR para autenticar la sesión de \textit{WhatsApp} en la aplicación. Para hacerlo, el código utiliza la función \textit{res.sendFile()} para enviar el archivo \textit{qr.svg} que se encuentra en la carpeta \textit{tmp} del directorio actual del proyecto. Además, se establece el encabezado de respuesta \textit{Content-Type} a \textit{image/svg+xml} para indicar que se está enviando un archivo SVG.
+
+La segunda función, llamada \textit{regenerateQrCode}, es otro controlador que se encarga de cerrar la sesión de \textit{WhatsApp} actual y volver a generar un nuevo código QR. Para hacerlo, se llama a una función \textit{logoutSrv()} que se encuentra en la clase \textit{leadCreator}. Luego, se envía la respuesta al cliente con la respuesta recibida de la función \textit{logoutSrv()}.
+
+
+\section{Desarrollo frontend}
+\label{sec:secarquitecturafrontend}
+Para el desarrollo de las interfaces de usuario se utilizó el framework Ionic \cite{WEBSITE:ionic}, implementando de esta manera el lenguaje Javascript tanto en el \textit{backend} como en el \textit{frontend}.
+
+\subsection{Patrón de desarrollo}
+\label{subsec:frontpatron}
+
+Se implementó el patrón de diseño MVC \citep{mvc} \textit{(Modelo-Vista-Controlador)} para estructurar la aplicaciones web. Este patrón divide la aplicación en tres capas principales: el modelo, el cual representa los datos y la lógica de negocio, la vista, que representa las interfaces de usuario, y el controlador, que actúa como intermediario entre la vista y el modelo.
+
+También se hizo uso de otros patrones de diseño, como el patrón de ``Inyección de Dependencias`` \citep{dependency-injection} \textit{Dependency Injection Pattern} y el patrón de ``Observador`` \citep{observer-pattern} \textit{Observer Pattern}. Estos patrones son utilizados para mejorar la escalabilidad, la flexibilidad y la mantenibilidad de las aplicaciones desarrolladas con Ionic.
+
+En la capa de la vista se utilizaron las páginas, componentes y módulos de Ionic. Las páginas son plantillas en HTML o lenguaje IONIC. Los componentes son elementos visuales que se desarrollan en lenguajes HTML, CSS y Javascript y son implementados en las páginas. Los módulos son grupos de páginas y componentes. 
+
+En la capa de controlador se utilizó un archivo Javascript con las funciones y la lógica para cada componente, dándole funcionalidad al mismo. 
+
+En la capa de modelo se implementaron los servicios de Ionic, estos son clases que contienen métodos y lógica de negocio para recuperar datos de la API. 
+
+Además se utilizó el manejo de rutas para mapear las URL a las páginas. Se asignó a cada módulo un archivo de rutas independiente para el manejo fluido de las mismas.
+
+A continuación se representa un ejemplo para el desarrollo del módulo de listar órdenes de trabajo implementando este patrón:
+
+
+
+\subsection{Interfaces de usuario}
+\label{subsec:frontinterfaces}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 % La idea de esta sección es resaltar los problemas encontrados, los criterios utilizados y la justificación de las decisiones que se hayan tomado.
 
