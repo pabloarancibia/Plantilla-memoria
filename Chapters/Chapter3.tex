@@ -49,9 +49,9 @@
 \label{subsec:funcionamiento}
 Como se puede observar en la figura \ref{fig:diagramafunciones}, el sistema está compuesto por nodos los cuales se utilizan para la lectura de tarjetas RFID asignadas a los repuestos de los clientes. Los datos se transmiten en una red lan local, se procesan y almacenan en un servidor con base de datos y son consultados desde la aplicación web en las terminales (\textit{PC} o \textit{smartphone}).
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
-	\includegraphics[scale=.20]{./Figures/diagramafunciones.png}
+	\includegraphics[scale=.50]{./Figures/diagramafunciones.png}
 	\caption{Diagrama de funciones generales.}
 	\label{fig:diagramafunciones}
 \end{figure}
@@ -68,7 +68,7 @@ En la figura \ref{fig:diagramabloques} se representa el patrón de modelo concep
 \end{itemize}
 
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.25]{./Figures/diagramabloques.png}
 	\caption{Diagrama de bloques y tecnologías del sistema.}
@@ -93,16 +93,44 @@ Las comunicaciones y el envío de datos entre los distintos módulos del sistema
 
 \subsection{Ingreso de repuesto}
 \label{subsec:ingresorepuesto}
-En la figura \ref{fig:flujoingreso} se puede observar todos los módulos del sistema, el flujo de datos y el protocolo utilizado cuando un usuario carga una nueva orden de trabajo en el sistema.
+En la figura \ref{fig:flujoingreso} se puede observar todos los módulos del sistema, el flujo de datos y protocolos que intervienen cuando un usuario carga una nueva orden de trabajo en el sistema.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=.20]{./Figures/flujoingreso.png}
-	\caption{Flujo en el ingreso de una nueva orden de trabajo.}
+	\caption{Flujo en el ingreso de una nueva órden de trabajo.}
 	\label{fig:flujoingreso}
 \end{figure}
   
-El flujo comienza cuando el usuario recibe el repuesto y selecciona una tarjeta RFID libre para usarla con ese repuesto. El usuario pasa la tarjeta por el nodo ubicado en la recepción y de esta manera se registra el número de tarjeta para ser utilizada. Luego el usuario carga los datos en el sistema web, dónde ya está asignada la tarjeta previamente leída, confirma los datos y estos son guardados en la base de datos. La nueva orden de trabajo tiene su número de tarjeta, los datos del cliente y el estado por defecto \textit{en espera}.
+El flujo inicia cuando el usuario recibe el repuesto y selecciona una tarjeta RFID libre para usarla con ese repuesto. El usuario pasa la tarjeta por el nodo ubicado en la recepción y de esta manera se registra el número de tarjeta para ser utilizada. Luego el usuario carga los datos en la aplicación web, dónde ya está asignada la tarjeta previamente leída, confirma los datos y estos son guardados en la base de datos. La nueva orden de trabajo tiene su número de tarjeta, los datos del cliente y el estado por defecto \textit{en espera}.
+
+\subsection{Cambio de estado}
+\label{subsec:flujocambioestado}
+
+En la figura \ref{fig:flujocambioestado} podemos observar el flujo completo para un cambio de estado de una órden de trabajo.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.10]{./Figures/flujo-cambio-estado.png}
+	\caption{Flujo en el cambio de estado de una órden de trabajo.}
+	\label{fig:flujocambioestado}
+\end{figure}
+
+El flujo inicia cuando un trabajador inicia o finaliza una óden, cambiando el estado de la misma a \textit{en proceso} o \textit{finalizada}. Para actualizar el estado de la órden debe pasar la tarjeta RFID asociada al repuesto por el nodo correspondiente, de esta manera se transmite la información por protocolo MQTT hasta la API de \textit{backend}, esta última realiza el la actualización en la base de datos y responde al nodo por medio de MQTT informando si la operación tuvo éxito. El nodo emitirá un sonido que informará al usuario del resultado obtenido (tabla de sonidos en capítulo \ref{subsec:mqttnodos}). Al mismo tiempo el usuario de la aplicación web verá reflejada la actualización del estado de la órden correspondiente en el listado de órdenes, ya que se está constantemente consultando por actualizaciones a la API por medio del protocolo HTTP utilizando el patrón observador de IONIC (detallado en el capítulo \ref{subsec:frontinterfaces}).
+
+\subsection{Retiro de repuesto}
+\label{subsec:flujoretiro}
+
+En la figura \ref{fig:flujoretiro} podemos observar el flujo completo en el retiro de un repuesto.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=.10]{./Figures/flujo-retiro.png}
+	\caption{Flujo en el retiro de una órden de trabajo.}
+	\label{fig:flujoretiro}
+\end{figure}
+
+El flujo inicia cuando el usuario de la aplicación web realiza una activación de lectura de tarjeta en la pantalla de retiro. Esto ocaciona que la aplicación active un \textit{modo escucha} hacia la API, esperando a que el usuario pase la tarjeta asociada al repuesto por el nodo \textit{mostrador}. Cuando esto sucede la API recibe por MQTT el número de tarjeta y mediante este recupera los datos de la órden correspondiente en la base de datos, luego devuelve los datos obtenidos a la aplicación web por medio del protocolo HTTP. La aplicación inserta todos estos datos en el formulario de retiro y, cuando el usuario confirma la operación, se realiza una petición HTTP con el método PUT para actualizar los datos de los registros. La tarjeta utilizada queda en estado \textit{libre} para ser reutilizada en una nueva órden de trabajo.
 
 \section{Arquitectura de datos}
 \label{sec:arquitecturadatos}
@@ -117,7 +145,7 @@ Para realizar el diseño de la base de datos se realizó un análisis de los req
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.15]{./Figures/diagramabbdd.png}
+	\includegraphics[scale=.27]{./Figures/diagramabbdd.png}
 	\caption{Diagrama de base de datos.}
 	\label{fig:diagramabbdd}
 \end{figure}
@@ -561,7 +589,7 @@ A medida que se avanzó en el desarrollo se fueron marcando en verde las casilla
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=.25]{./Figures/mqtt-funciones.png}
+	\includegraphics[scale=.15]{./Figures/mqtt-funciones.png}
 	\caption{Diagrama de funciones MQTT.}
 	\label{fig:mqttfunciones}
 	
@@ -574,13 +602,26 @@ En la figura \ref{fig:mqttfunciones} se pueden apreciar los distintos actores qu
 
 Como se observa en la figura \ref{fig:mqtttopics}, se organizan los \textit{topics} MQTT en una tabla, en este caso, según el nodo o sensor y podemos ver en la cabecera de la tabla la información que representaremos para cada mensaje, el \textit{topic}, si es una publicación o subscripción, el mensaje en cuestión y una breve explicación de cual es la función que cumple la comunicación.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/mqtt-topics.png}
 	\caption{Tabla de \textit{topics} MQTT.}
 	\label{fig:mqtttopics}
-	
 \end{figure}
+
+La lista completa de \textit{topics} implementados es la siguiente:
+\begin{itemize}
+\item *: API \textit{backend} se suscibre a todos los mensajes.
+\item nodo/discriminar: emite nodo ``mostrador`` para ingresar o retirar órdenes de trabajo. Recibe API \textit{backend}.
+\item nodo/cambiarestado: emite nodo ``proceso`` o ``finalizado`` para cambiar el estado de una órden de trabajo. Recibe API \textit{backend}.
+\item api/error/mostrador: emite la API de \textit{backend} para informar un error en el proceso. Recibe nodo ``mostrador``.
+\item api/error/proceso: emite la API de \textit{backend} para informar un error en el proceso. Recibe nodo ``proceso``.
+\item api/error/finalizado: emite la API de \textit{backend} para informar un error en el proceso. Recibe nodo ``finalizado```.
+\item api/confirmacion/mostrador: emite la API de \textit{backend} para informar proceso exitoso. Recibe nodo ``mostrador``.
+\item api/confirmacion/proceso: emite la API de \textit{backend} para informar proceso exitoso. Recibe nodo ``proceso``.
+\item api/confirmacion/finalizado: emite la API de \textit{backend} para informar proceso exitoso. Recibe nodo ``finalizado``.
+
+\end{itemize}
 
 \subsection{Broker MQTT}
 \label{subsec:mqttbroker}
@@ -589,18 +630,19 @@ Para la implementación en el servidor del sistema en la Raspberry Pi del \texti
 
 En la figura \ref{fig:mqttestructuracarpetas} podemos observar la estructura de carpetas y archivos que se implementa en el contenedor de Docker para este servicio. 
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.60]{./Figures/mqtt-estructura-carpetas.png}
+	\caption{Estructura de carpetas del servicio Ecplipse Mosquitto en Docker.}
+	\label{fig:mqttestructuracarpetas}
+\end{figure}
+
 \begin{itemize}
 	\item En la carpeta \textit{data} se encuentra el archivo de base de datos \textit{mosquitto.db} donde se pueden persistir los mensajes MQTT según la configuración de persistencia implementada.
 	\item En la carpeta \textit{etc} se encuentra el archivo de configuración principal del \textit{broker}: \textit{mosquitto.conf}, aquí se declaran todos los parámetros con los cuales Docker Compose levantará el servicio. El archivo \textit{mqttusers} persiste de manera encriptada las credenciales de acceso para los clientes MQTT, estos usuarios son administrados por linea de comando en la terminal \textit{bash} ingresando al contenedor específico. Por último se agregó un archivo con el ejemplo de comandos para administrar usuarios: \textit{mqttusers.example}.
 	\item La carpeta \textit{log} contiene el archivo \textit{mosquitto.log} donde se registran todos los logs del servicio y que sirven para hacer un \textit{debug} o \textit{test} del mismo.	
 \end{itemize}
 
-\begin{figure}[ht]
-	\centering
-	\includegraphics[scale=.60]{./Figures/mqtt-estructura-carpetas.png}
-	\caption{Estructura de carpetas del servicio Ecplipse Mosquitto en Docker.}
-	\label{fig:mqttestructuracarpetas}
-\end{figure}
 
 \subsection{MQTT en nodos}
 \label{subsec:mqttnodos}
@@ -626,6 +668,15 @@ De esta manera el ciclo de lecturas de los nodos para una órden de trabajo es e
 \item Nodo ``finalizado``, se asigna el estado ``finalizado``.
 \item Nodo ``mostrador``, se asigna el estado ``retirado``.
 \end{enumerate}
+
+Cuando un nodo envía o recibe una señal MQTT emite alertas sonoras para informar al usuario si la operación correspondiente tuvo éxito o fracasó.En la figura \ref{fig:mqttsonidosnodos} se puede observar como se implementaron estas señales sonoras en los nodos. Además podemos ver que existen dos opciones de sonidos, una es en forma de una sola nota denominada en la tabla \textit{Sonidos Clásicos} y otra es en forma de una melodía denominada \textit{Melodías}. Se configura en cada nodo la opción deseada desde las variables de entorno. Además se realiza en el código una validación para asegurarse que el tipo de \textit{buzzer} instalado es compatible con la opción \textit{Melodía}, en caso que no lo sea se ejecuta por defecto la opción \textit{Sonidos Clásicos}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.40]{./Figures/mqtt-sonidos-nodos.png}
+	\caption{Tabla de detalles de sonidos de nodos.}
+	\label{fig:mqttsonidosnodos}
+\end{figure}
 
 
 
@@ -686,15 +737,6 @@ A continuación se presenta un diagrama del flujo del código fuente para resolv
 \end{figure}
 
 Como puede observarse en la figura \ref{fig:mqttcontrollerapi} las validaciones dependen tanto del \textit{topic} recibido como del estado de la tarjeta. De acuerdo a eso se realizan los procesos correspondientes y se devuelve siempre un mensaje MQTT al nodo emisor el cual, de acuerdo al mensaje recibido, emitira una señal sonora a travez del \textit{buzzer} para informar al usuario si la acción tuvo éxito o no.
-
-En la figura \ref{fig:mqttsonidosnodos} se puede observar como se implementaron las señales sonoras en los nodos para informar al usuario sobre el estado de procesosy errores. Además podemos ver que existen dos opciones de sonidos, una es en forma de una sola nota denominada en la tabla \textit{Sonidos Clásicos} y otra es en forma de una melodía conocida denominada \textit{Melodías}. Se configura en cada nodo la opción deseada desde las variables de entorno. Además se realiza en el código una validación para asegurarse que el tipo de \textit{buzzer} instalado es compatible con la opción \textit{Melodía}, en caso que no lo sea se ejecuta directamente la opción \textit{Sonidos Clásicos}
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[scale=.40]{./Figures/mqtt-sonidos-nodos.png}
-	\caption{Tabla de detalles de sonidos de nodos.}
-	\label{fig:mqttsonidosnodos}
-\end{figure}
 
 
 \section{API para mensajería}
@@ -764,7 +806,7 @@ Además se utilizó el manejo de rutas para mapear las URL a las páginas. Se as
 
 En la figura \ref{fig:frontmvc} podemos observar una representación del flujo utilizando este patrón. 
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.15]{./Figures/front-mvc.png}
 	\caption{Flujo en MVC.}
@@ -805,7 +847,7 @@ Las interfaces de usuario que se desarrollaron fueron:
 \label{subsubsec:frontnuevaorden}
 En la figura \ref{fig:nuevafull1} podemos observar los primeros campos del formulario a rellenar para cargar una nueva órden de trabajo.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/nueva-full-1.png}
 	\caption{Interfaz de usuario para nueva órden de trabajo.}
@@ -819,7 +861,7 @@ Para cargar el tipo de trabajo, datos del cliente y la motocicleta se utilizan i
 
 En la figura \ref{fig:nuevatrabajo} se presenta la interfaz de tipo modal para seleccionar el tipo de trabajo a asignar a la órden.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/nueva-trabajo.png}
 	\caption{Interfaz de usuario de tipo modal para seleccionar tipo de trabajo.}
@@ -828,7 +870,7 @@ En la figura \ref{fig:nuevatrabajo} se presenta la interfaz de tipo modal para s
 
 Para cargar o buscar los datos de clientes se utilizó el mismo componente, reutilizando así parte del código fuente. Como podemos ver en las figuras \ref{fig:nuevacliente1} y \ref{fig:nuevacliente2}, también se usa el tipo de interfaz modal.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/nueva-clientes-1.png}
 	\caption{Interfaz de usuario de tipo modal para seleccionar o buscar cliente.}
@@ -837,7 +879,7 @@ Para cargar o buscar los datos de clientes se utilizó el mismo componente, reut
 
 En la figura \ref{fig:nuevacliente2} podemos observar el resultado de una búsqueda de clientes. Se selecciona el que se desea asignar y se hace click en ``CONFIRMAR``.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/nueva-clientes-2.png}
 	\caption{Interfaz de usuario de tipo modal con el resultado de búsqueda de clientes.}
@@ -847,14 +889,14 @@ En la figura \ref{fig:nuevacliente2} podemos observar el resultado de una búsqu
 De la misma manera se puede seleccionar o crear un registro de datos de una nueva motocicleta para asignar a la órden. En las figuras \ref{fig:nuevamoto1} y \ref{fig:nuevamoto2} vemos las interfaces modales.
 
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/nueva-moto-1.png}
 	\caption{Interfaz de usuario de tipo modal para seleccionar o buscar motocicleta.}
 	\label{fig:nuevamoto1}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/nueva-moto-2.png}
 	\caption{Interfaz de usuario de tipo modal con el resultado de búsqueda de motocicletas.}
@@ -864,7 +906,7 @@ De la misma manera se puede seleccionar o crear un registro de datos de una nuev
 Volviendo a la segunda sección del formulario para agregar una nueva órden, ya habiendo cargado el número de tarjeta, el tipo de trabajo, el cliente y la motocicleta, continuamos con los campos que se representan en la figura \ref{fig:nuevafull2}.
 
  
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/nueva-full-2.png}
 	\caption{Interfaz de usuario para nueva órden de trabajo.}
@@ -896,7 +938,7 @@ La última opción corresponde a ``LIMPIAR FORMULARIO`` que borra los datos del 
 
 En la figura \ref{fig:listado1} podemos observar la interfaz gráfica para donde se listan las órdenes de trabajo según las opciones seleccionadas.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/listado-1.png}
 	\caption{Interfaz de usuario para listar las órdenes de trabajo.}
@@ -928,14 +970,14 @@ Además se asigna un botón en la columna ``Mensaje``, solamente a las filas de 
 
 En las figuras \ref{fig:listado2} y \ref{fig:listado3} vemos los alertas de tipo modal que se utilizan para confirmar cuando el usuario va a enviar o reenviar un mensaje a un cliente.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/listado-2.png}
 	\caption{Confirmar envío de mensaje de texto al cliente.}
 	\label{fig:listado2}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/listado-3.png}
 	\caption{Confirmar reenvío de mensaje de texto al cliente.}
@@ -957,14 +999,14 @@ De esta manera finaliza el ciclo de un repuesto que ingresa a la empresa, es pro
 
 En las figuras \ref{fig:retirar1} y \ref{fig:retirar2} vemos la interfaz para retirar una órden de trabajo.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/retirar-1.png}
 	\caption{Formulario para retirar órden de trabajo.}
 	\label{fig:retirar1}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/retirar-2.png}
 	\caption{Confirmar retiro de órden de trabajo.}
@@ -978,7 +1020,7 @@ Para la autenticación a la API de mensajería se utiliza un código QR que se o
 
 En la figura \ref{fig:frontqr} podemos ver la interfaz para autenticarse mediante código QR. También se puede observar el botón ``ACTUALIZAR`` para refrescar el código por uno nuevo´.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.30]{./Figures/qr-page.png}
 	\caption{Interfaz para autenticación en API de mensajería.}
@@ -1084,19 +1126,37 @@ A continuación se describen cada uno de los servicios para la aplicación:
 
 \item messenger: este servicio utiliza un archivo Dockerfile en el directorio de la API de mensajería para crear un contenedor y servir la API. Se le asigna un nombre de contenedor \textit{messenger} y se mapea al puerto 3003.
 
-\item portainer: este servicio utiliza la imagen de Docker \textit{portainer/portainer-ce} para crear un contenedor del administrador de Docker \textit{Portainer}. Se mapea el puerto 9000 y se utiliza un volumen para almacenar los datos.
+\item portainer: este servicio utiliza la imagen de Docker \textit{portainer/portainer-ce} para crear un contenedor del administrador de Docker \textit{Portainer}. Se mapea el puerto 9000 y se utiliza un volumen para almacenar los datos. Se describe esta herramienta en el capítulo \ref{subsec:portainer}.
 \end{itemize}
 
 Al desplegar Docker Compose se levantan todos los servicios como se muestra en la figura \ref{fig:docker-interfaz}.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.60]{./Figures/docker-interfaz.png}
 	\caption{Contenedores de Docker.}
 	\label{fig:docker-interfaz}
 \end{figure}
 
+\section{Implementación de Hardware}
+\label{sec:implementacionhw}
 
+A continuación se describe la implementación del \textit{hardware} utilizado y detallado en el capítulo \ref{sec:hardware}.
+
+Para el manejo de la red local se configuró un \textit{router} con una red Wi-Fi con filtrado de MAC Address y un servidor DHCP con entrega IP fija a los dispositivos del sistema.
+
+En la figura \ref{fig:diagramared} podemos observar el diagrama de red del sistema, detallando que tipo de conexión realiza cada dispositivo.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.10]{./Figures/diagrama-red.png}
+	\caption{Diagrama de red del sistema.}
+	\label{fig:diagramared}
+\end{figure}
+
+En el servidor se implementó una placa Raspberry Pi 4. Para esta placa se imprimió un gabinete personalizado utilizando una impresora de tipo 3D, se incluyó además un espacio adicional en el gabinete para agregar un disco tipo SSD para ampliar las capacidades de la placa.
+
+Para los nodos se utilizó el microcontrolador NodeMCU Esp32, el sensor de radiofrecuenta MRC522 y un buzzer sonoro. El diseño del circuito en un \textit{software} especializado y la impresión de la placa PCB estuvo a cargo de colaboradores.  
 
 
 % La idea de esta sección es resaltar los problemas encontrados, los criterios utilizados y la justificación de las decisiones que se hayan tomado.
