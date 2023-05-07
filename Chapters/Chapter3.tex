@@ -47,7 +47,7 @@
 
 \subsection{Funcionamiento}
 \label{subsec:funcionamiento}
-Como se puede observar en la figura \ref{fig:diagramafunciones}, el sistema está compuesto por nodos los cuales se utilizan para la lectura de tarjetas RFID asignadas a los repuestos de los clientes. Los datos se transmiten en una red lan local, se procesan y almacenan en un servidor con base de datos y son consultados desde la aplicación web en las terminales (\textit{PC} o \textit{smartphone}).
+Como se puede observar en la figura \ref{fig:diagramafunciones}, el sistema está compuesto por nodos, los cuales se utilizan para la lectura de tarjetas RFID asignadas a los repuestos de los clientes. Los datos se transmiten en una red local, se procesan y almacenan en un servidor con base de datos y son consultados desde la aplicación web en las terminales (\textit{PC} o \textit{smartphone}).
 
 \begin{figure}[H]
 	\centering
@@ -76,24 +76,24 @@ En la figura \ref{fig:diagramabloques} se representa el patrón de modelo concep
 \end{figure}
 
 
-En la capa de percepción se utilizan los nodos esp32 con lector RFID con los cuales se realiza la lectura de las tarjetas correspondientes. Una vez realizada la lectura, los datos son enviados por medio del protocolo MQTT y a traves de la red lan en la capa de transporte. 
+En la capa de percepción se utilizan los nodos ESP32 con lector RFID con los cuales se realiza la lectura de las tarjetas correspondientes. Una vez realizada la lectura, los datos son enviados por medio del protocolo MQTT y a través de la red local en la capa de transporte. 
 
-La capa de transporte es la encargada de transmitir los mensajes por medio de los protocolos MQTT y HTTP. El broker \textit{Eclipse Mosquitto} distribuye los mensajes publicados a los subscriptores para su procesamiento.
+La capa de transporte es la encargada de transmitir los mensajes por medio de los protocolos MQTT y HTTP. El \textit{broker} Eclipse Mosquitto distribuye los mensajes publicados a los suscriptores para su procesamiento.
 
-En la capa de procesamiento se realiza la lógica del backend, la base de datos y el frontend. Se implementó un servidor central en una Raspberry Pi 4 con todos los servicios. Cada uno de los servicios está desarrollado de manera individual y fue montado en su propio contenedor de Docker. Todos los contenedores se despliegan utilizando Docker Compose.
+En la capa de procesamiento se realiza la lógica del \textit{backend}, la base de datos y el \textit{frontend}. Se implementó un servidor central en una Raspberry Pi 4 con todos los servicios. Cada uno de los servicios está desarrollado de manera individual y fue montado en su propio contenedor de Docker. Todos los contenedores se despliegan utilizando Docker Compose.
 
-Por último, la capa de aplicación otorga el acceso web desarrollado en el framework \textit{Ionic} para el ingreso, registro, administración y egreso de las ordenes de trabajo y también se utiliza el portal de administración de \textit{Portainer} para el monitoreo completo de Docker y del servidor.
+Por último, la capa de aplicación otorga el acceso web, desarrollado en el \textit{framework } \textit{Ionic}, para el ingreso, registro, administración y egreso de las órdenes de trabajo. También se utiliza el portal de administración de \textit{Portainer} para el monitoreo completo de Docker y del servidor.
 
 
 \section{Flujo general del sistema}
 \label{sec:flujogeneral}
-En esta sección se explica el flujo total de las funciones del sistema desde que el usuario ingresa una nueva orden de trabajo hasta que el producto es retirado por el cliente.
+En esta sección se explica el flujo total de las funciones del sistema desde que el usuario ingresa una nueva órden de trabajo hasta que el producto es retirado por el cliente.
 
 Las comunicaciones y el envío de datos entre los distintos módulos del sistema se realizan en los protocolos HTTP, MQTT y MySQL. Se detallará en cada caso el protocolo utilizado.
 
 \subsection{Ingreso de repuesto}
 \label{subsec:ingresorepuesto}
-En la figura \ref{fig:flujoingreso} se puede observar todos los módulos del sistema, el flujo de datos y protocolos que intervienen cuando un usuario carga una nueva orden de trabajo en el sistema.
+En la figura \ref{fig:flujoingreso} se puede observar todos los módulos del sistema, el flujo de datos y protocolos que intervienen cuando un usuario carga una nueva órden de trabajo en el sistema.
 
 \begin{figure}[ht]
 	\centering
@@ -102,7 +102,7 @@ En la figura \ref{fig:flujoingreso} se puede observar todos los módulos del sis
 	\label{fig:flujoingreso}
 \end{figure}
   
-El flujo inicia cuando el usuario recibe el repuesto y selecciona una tarjeta RFID libre para usarla con ese repuesto. El usuario pasa la tarjeta por el nodo ubicado en la recepción y de esta manera se registra el número de tarjeta para ser utilizada. Luego el usuario carga los datos en la aplicación web, dónde ya está asignada la tarjeta previamente leída, confirma los datos y estos son guardados en la base de datos. La nueva orden de trabajo tiene su número de tarjeta, los datos del cliente y el estado por defecto \textit{en espera}.
+El flujo inicia cuando el usuario recibe el repuesto y selecciona una tarjeta RFID libre para usarla con ese repuesto. El usuario pasa la tarjeta por el nodo ubicado en la recepción, nodo \textit{mostrador}, y de esta manera se registra el número de tarjeta para ser utilizada. Luego el usuario carga los datos en la aplicación web, dónde ya está asignada la tarjeta previamente leída, confirma los datos y estos son guardados en la base de datos. La nueva órden de trabajo tiene su número de tarjeta, los datos del cliente y el estado por defecto \textit{en espera}.
 
 \subsection{Cambio de estado}
 \label{subsec:flujocambioestado}
@@ -130,7 +130,7 @@ En la figura \ref{fig:flujoretiro} podemos observar el flujo completo en el reti
 	\label{fig:flujoretiro}
 \end{figure}
 
-El flujo inicia cuando el usuario de la aplicación web realiza una activación de lectura de tarjeta en la pantalla de retiro. Esto ocaciona que la aplicación active un \textit{modo escucha} hacia la API, esperando a que el usuario pase la tarjeta asociada al repuesto por el nodo \textit{mostrador}. Cuando esto sucede la API recibe por MQTT el número de tarjeta y mediante este recupera los datos de la órden correspondiente en la base de datos, luego devuelve los datos obtenidos a la aplicación web por medio del protocolo HTTP. La aplicación inserta todos estos datos en el formulario de retiro y, cuando el usuario confirma la operación, se realiza una petición HTTP con el método PUT para actualizar los datos de los registros. La tarjeta utilizada queda en estado \textit{libre} para ser reutilizada en una nueva órden de trabajo.
+El flujo inicia cuando el usuario de la aplicación web realiza una activación de lectura de tarjeta en la pantalla de retiro. Esto ocasiona que la aplicación active un \textit{modo escucha} hacia la API, esperando a que el usuario pase la tarjeta asociada al repuesto por el nodo \textit{mostrador}. Cuando esto sucede la API recibe por MQTT el número de tarjeta y mediante este recupera los datos de la órden correspondiente en la base de datos, luego devuelve los datos obtenidos a la aplicación web por medio del protocolo HTTP. La aplicación inserta todos estos datos en el formulario de retiro y, cuando el usuario confirma la operación, se realiza una petición HTTP con el método PUT para actualizar los datos de los registros. La tarjeta utilizada queda en estado \textit{libre} para ser reutilizada en una nueva órden de trabajo.
 
 \section{Arquitectura de datos}
 \label{sec:arquitecturadatos}
@@ -141,7 +141,7 @@ En la presente sección se desarrollará la arquitectura en la base de datos MyS
 
 En la figura \ref{fig:diagramabbdd} se representa un diagrama UML de la base de datos con sus tablas y relaciones.
 
-Para realizar el diseño de la base de datos se realizó un análisis de los requerimientos y los casos de usos o historias de usuario, a partir de esto se inició el diagrama con las tablas principales y sus relaciones, a medida que se avanzaba en el desarrollo de la API y del sistema  se fueron añadiendo nuevas tablas y relaciones segun las necesidades. 
+Para realizar el diseño de la base de datos se realizó un análisis de los requerimientos y los casos de usos o historias de usuario, a partir de esto se inició el diagrama con las tablas principales y sus relaciones, a medida que se avanzaba en el desarrollo de la API y del sistema  se fueron añadiendo nuevas tablas y relaciones según las necesidades. 
 
 \begin{figure}[h]
 	\centering
@@ -152,7 +152,7 @@ Para realizar el diseño de la base de datos se realizó un análisis de los req
 
 \subsection{Estructura de archivos para ORM}
 \label{subsec:estructuraorm}
-Para el desarrollo de la base de datos se utilizó el ORM Sequelize. Como se menciona en el capítulo \ref{subsec:sequelize}, existen multiples ventajas al utilizar un ORM en vez de directamente programar la base de datos en lenguaje SQL, se tuvieron en cuenta esas ventajas a la hora de optar por realizar el desarrollo con este ORM. 
+Para el desarrollo de la base de datos se utilizó el ORM Sequelize. Como se menciona en el capítulo \ref{subsec:sequelize}, existen múltiples ventajas al utilizar un ORM en vez de directamente programar la base de datos en lenguaje SQL, se tuvieron en cuenta esas ventajas a la hora de optar por realizar el desarrollo con este ORM. 
 
 La estructura de carpetas y archivos está definida previamente por el ORM pudiendo realizar algunas personalizaciones. 
 
@@ -167,9 +167,9 @@ En la figura \ref{fig:estructuraorm} podemos ver la estructura implementada.
 
 Dentro de la carpeta \textit{config} se definen los archivos de configuración de Sequelize y el acceso a la base de datos MySQL.
 
-En la carpeta migrations, models y seeders se encuentran todos los archivos Javascript para las migraciones, los modelos y semillas, estos archivos se detallarán en las próximas seccciones. 
+En la carpeta migrations, models y seeders se encuentran todos los archivos Javascript para las migraciones, los modelos y semillas, estos archivos se detallarán en las próximas secciones. 
 
-El archivo .sequelizerc sirve para definir la ubicación de los modelos, migraciones, semillas y otros archivos generados por Sequelize.
+El archivo \textit{.sequelizerc} sirve para definir la ubicación de los modelos, migraciones, semillas y otros archivos generados por Sequelize.
 
 
 \subsection{Desarrollo de modelos y tablas}
@@ -180,7 +180,7 @@ El archivo .sequelizerc sirve para definir la ubicación de los modelos, migraci
 A continuación se presentan algunos fragmentos de código fuente empleados para el desarrollo de la base de datos, siguiendo esta misma modalidad se realizaron todas las tablas de la base de datos, sus modificaciones y sus respectivas migraciones.
 
 
-El siguiente código se ejecuta en la terminal de linux para crear el archivo para el modelo y el archivo para la migración de la tabla para ``Orden de trabajo". En el código se define el nombre del modelo y un atributo id. 
+El siguiente código se ejecuta en la terminal de linux para crear el archivo para el modelo y el archivo para la migración de la tabla para ``Órden de trabajo". En el código se define el nombre del modelo y un atributo id. 
 
 \begin{lstlisting}[label=cod:sequelizeclimodel,caption=Código CLI para crear modelo y migración en Sequelize.]
 npx sequelize-cli model:generate --name mqtt_messages_gral --attributes id:integer
@@ -270,16 +270,16 @@ module.exports = (sequelize, DataTypes) => {
 
 \end{lstlisting}
 
-En las lineas 1 a la 4 se realizan las declaraciones de la librería y el nombre del modelo, 
-luego en las lineas 6 a la 31 se definen las relaciones que tendrá el modelo, los tipos de relaciones pueden ser 1 a 1, 1 a muchos o muchos a muchos. Luego a partir de la lines 33 se definen los campos de la tabla o modelo, se definen también los atributos de los campos y el tipo de datos. En las lineas 74 y 75 se define el nombre personalizado que tendrá la tabla en la base de datos y el nombre del modelo que reconocerá el ORM. Por último en la linea 77 se retorna la Clase creada, de esta manera podrá ser utilizada en otras partes del código fuente.
+En las líneas 1 a la 4 se realizan las declaraciones de la librería y el nombre del modelo, 
+luego en las líneas 6 a la 31 se definen las relaciones que tendrá el modelo, los tipos de relaciones pueden ser 1 a 1, 1 a muchos o muchos a muchos. Luego a partir de la línea 33 se definen los campos de la tabla o modelo, se definen también los atributos de los campos y el tipo de datos. En las líneas 74 y 75 se define el nombre personalizado que tendrá la tabla en la base de datos y el nombre del modelo que reconocerá el ORM. Por último en la línea 77 se retorna la Clase creada, de esta manera podrá ser utilizada en otras partes del código fuente.
 
 
 \subsection{Desarrollo de migraciones}
 \label{subsec:migracionesbasededatos}
 
-Como se menciona en la sección anterior, el archivo con la estructura inicial de migraciones se crea a traves del CLI de Sequelize al momento de crear el modelo para una tabla, luego hay que personalizar esta estructura para que quede igual al modelo definido previamente. 
+Como se menciona en la sección anterior, el archivo con la estructura inicial de migraciones se crea a través del CLI de Sequelize al momento de crear el modelo para una tabla, luego hay que personalizar esta estructura para que quede igual al modelo definido previamente. 
 
-A continuación se representa el código \textit{javascript} para la migración del modelo ``Orden de trabajo":
+A continuación se representa el código \textit{javascript} para la migración del modelo ``Órden de trabajo":
 
 \begin{lstlisting}[caption= Código para migración en Sequelize.]
 'use strict';
@@ -358,7 +358,7 @@ module.exports = {
 };
 \end{lstlisting}
 
-Como se puede notar, el código es muy parecido al del modelo, con la diferencia que en este caso, ademas de los campos y sus atributos, sólo se deben definir directamente las claves que representan a las relaciones 1 a muchos que tendrá esta tabla, dejando de lado el resto de relaciones. 
+Como se puede notar, el código es muy parecido al del modelo, con la diferencia que en este caso, además de los campos y sus atributos, sólo se deben definir directamente las claves que representan a las relaciones 1 a muchos que tendrá esta tabla, dejando de lado el resto de relaciones. 
 
 Otra de las particularidades principales del archivo de migración es que contiene dos funciones que se ejecutan de manera asíncrona, la función up y down, la primera creará la tabla y la segunda se ejecuta en caso de alguna falla y elimina la tabla. 
   
@@ -368,7 +368,7 @@ Otra de las particularidades principales del archivo de migración es que contie
 
 En Sequelize se pueden realizar todas las funciones necesarias para interactuar con la base de datos, ya sea para insertar, actualizar o eliminar registros, como así también los métodos para leer registros utilizando filtros o condiciones particulares.
 
-A continuación se representan a modo de ejemplo algunos fragmentos de código Javascript empleados para tal fin:
+A continuación se presentan a modo de ejemplo algunos fragmentos de código Javascript empleados para tal fin:
 
 Código para traer todas las órdenes de trabajo existentes, incluyendo otros modelos relacionados a este:
 
@@ -420,7 +420,7 @@ const nuevaOrdenTrabajo = async (req,res) => {
 }
 \end{lstlisting}
 
-En las lineas 5 y 6 es dónde se realiza la creación del registro, pasándole los datos que se reciben como parámetros en el \textit{body} de la petición HTTP.
+En las líneas 5 y 6 es dónde se realiza la creación del registro, pasándole los datos que se reciben como parámetros en el \textit{body} de la petición HTTP.
 
 Por último se muestra cómo actualizar un registro de la base de datos, previamente trayendo el objeto por su id:
 
@@ -443,13 +443,13 @@ let orden = await OrdenTrabajo.findOne({
             });
 \end{lstlisting}
 
-Podemos observar que en la linea 3 se busca el registro mediante su id y se guarda el mismo en una variable, luego se utiliza esa variable para realizar la actualización de los datos, por lo que esa variable pasa a ser un ``objeto de Sequelize" que puede ser tratado directamente como entidad única de la base de datos, facilitando su uso mediante el ORM.
+Podemos observar que en la línea 3 se busca el registro mediante su id y se guarda el mismo en una variable, luego se utiliza esa variable para realizar la actualización de los datos, por lo que esa variable pasa a ser un ``objeto de Sequelize" que puede ser tratado directamente como entidad única de la base de datos, facilitando su uso mediante el ORM.
 
 
 \section{Desarrollo API REST}
 \label{sec:arquitecturaapirest}
 
-La lógica del backend se centra principalmente en la API REST desarrollada, en la misma se utilizaron diferentes tecnologías las cuales están descriptas en el capítulo \ref{sec:backend}.
+La lógica del backend se centra principalmente en la API REST desarrollada, en la misma se utilizaron diferentes tecnologías las cuales están descritas en el capítulo \ref{sec:backend}.
 
 A continuación se detalla su desarrollo e implementación.
 
@@ -480,9 +480,9 @@ En las siguientes secciones se detallan las carpetas \textit{routers} y \textit{
 \subsection{Ruteo de la API}
 \label{subsec:apirouters}
 
-En la carpeta \textit{routers} se encuentran los archivos Javascript que corresponden a las rutas que manejará Express para recibir las peticiones o \textit{requests} HTTP provenientes desde fuera de la API, generalmente desde el cliente \textit{frontend}.
+En la carpeta \textit{routers} se encuentran los archivos Javascript que corresponden a las rutas que maneja Express para recibir las peticiones o \textit{requests} HTTP provenientes desde fuera de la API, generalmente desde el cliente \textit{frontend}.
 
-En la figura \ref{fig:apiroutes} se muetran los archivos de ruteo que se crearon siguiendo el patrón modular, separando las rutas según su entidad o funcionalidad.
+En la figura \ref{fig:apiroutes} se muestran los archivos de ruteo que se crearon siguiendo el patrón modular, separando las rutas según su entidad o funcionalidad.
 
 \begin{figure}[ht]
 	\centering
@@ -493,7 +493,7 @@ En la figura \ref{fig:apiroutes} se muetran los archivos de ruteo que se crearon
 
 En el archivo \textit{ordentrabajoRouter.js} se manejan las peticiones a rutas referentes a las órdenes de trabajo, de la misma manera para los demás archivos. 
 
-A modo de ejemplo se representa un fragmento de código de ruteo correspondientes a órdenes de trabajo:
+A modo de ejemplo se presenta un fragmento de código de ruteo correspondientes a órdenes de trabajo:
 
 
 \begin{lstlisting}[label=cod:routesot,caption=Código de ruteo para órdenes de trabajo.]
@@ -520,7 +520,7 @@ De esta manera se logra separar la lógica de ruteo de la lógica de procesos y 
 
 Como se mencionó en la sección previa, los controladores son funciones que se ejecutan luego de resolver la ruta a la cual están asociados. 
 
-En la figura \ref{fig:apicontrollers} se puede ver como en la carpeta \textit{controllers} se definieron los controladores siguiendo el patrón modular de desarrollo, teniendo encuenta la entidad o la funcionalidad que se desea procesar.
+En la figura \ref{fig:apicontrollers} se puede ver como en la carpeta \textit{controllers} se definieron los controladores siguiendo el patrón modular de desarrollo, teniendo en cuenta la entidad o la funcionalidad que se desea procesar.
 
 \begin{figure}[ht]
 	\centering
@@ -600,7 +600,7 @@ En la figura \ref{fig:mqttfunciones} se pueden apreciar los distintos actores qu
 \subsection{Topics MQTT}
 \label{subsec:mqtttopics}
 
-Como se observa en la figura \ref{fig:mqtttopics}, se organizan los \textit{topics} MQTT en una tabla, en este caso, según el nodo o sensor y podemos ver en la cabecera de la tabla la información que representaremos para cada mensaje, el \textit{topic}, si es una publicación o subscripción, el mensaje en cuestión y una breve explicación de cual es la función que cumple la comunicación.
+Como se observa en la figura \ref{fig:mqtttopics}, se organizan los \textit{topics} MQTT en una tabla, en este caso, según el nodo o sensor y podemos ver en la cabecera de la tabla la información que representaremos para cada mensaje, el \textit{topic}, si es una publicación o suscripción, el mensaje en cuestión y una breve explicación de cuál es la función que cumple la comunicación.
 
 \begin{figure}[H]
 	\centering
@@ -611,7 +611,7 @@ Como se observa en la figura \ref{fig:mqtttopics}, se organizan los \textit{topi
 
 La lista completa de \textit{topics} implementados es la siguiente:
 \begin{itemize}
-\item *: API \textit{backend} se suscibre a todos los mensajes.
+\item *: API \textit{backend} se suscribe a todos los mensajes.
 \item nodo/discriminar: emite nodo ``mostrador`` para ingresar o retirar órdenes de trabajo. Recibe API \textit{backend}.
 \item nodo/cambiarestado: emite nodo ``proceso`` o ``finalizado`` para cambiar el estado de una órden de trabajo. Recibe API \textit{backend}.
 \item api/error/mostrador: emite la API de \textit{backend} para informar un error en el proceso. Recibe nodo ``mostrador``.
@@ -626,20 +626,20 @@ La lista completa de \textit{topics} implementados es la siguiente:
 \subsection{Broker MQTT}
 \label{subsec:mqttbroker}
 
-Para la implementación en el servidor del sistema en la Raspberry Pi del \textit{broker} MQTT ``Eclipse Mosquitto" se utilizó un servicio de Docker Compose el cual permite levantar el \textit{broker} y sus configuraciónes.
+Para la implementación en el servidor del sistema en la Raspberry Pi del \textit{broker} MQTT ``Eclipse Mosquitto" se utilizó un servicio de Docker Compose el cual permite levantar el \textit{broker} y sus configuraciones.
 
 En la figura \ref{fig:mqttestructuracarpetas} podemos observar la estructura de carpetas y archivos que se implementa en el contenedor de Docker para este servicio. 
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=.60]{./Figures/mqtt-estructura-carpetas.png}
-	\caption{Estructura de carpetas del servicio Ecplipse Mosquitto en Docker.}
+	\caption{Estructura de carpetas del servicio Eclipse Mosquitto en Docker.}
 	\label{fig:mqttestructuracarpetas}
 \end{figure}
 
 \begin{itemize}
 	\item En la carpeta \textit{data} se encuentra el archivo de base de datos \textit{mosquitto.db} donde se pueden persistir los mensajes MQTT según la configuración de persistencia implementada.
-	\item En la carpeta \textit{etc} se encuentra el archivo de configuración principal del \textit{broker}: \textit{mosquitto.conf}, aquí se declaran todos los parámetros con los cuales Docker Compose levantará el servicio. El archivo \textit{mqttusers} persiste de manera encriptada las credenciales de acceso para los clientes MQTT, estos usuarios son administrados por linea de comando en la terminal \textit{bash} ingresando al contenedor específico. Por último se agregó un archivo con el ejemplo de comandos para administrar usuarios: \textit{mqttusers.example}.
+	\item En la carpeta \textit{etc} se encuentra el archivo de configuración principal del \textit{broker}: \textit{mosquitto.conf}, aquí se declaran todos los parámetros con los cuales Docker Compose levantará el servicio. El archivo \textit{mqttusers} persiste de manera encriptada las credenciales de acceso para los clientes MQTT, estos usuarios son administrados por línea de comando en la terminal \textit{bash} ingresando al contenedor específico. Por último se agregó un archivo con el ejemplo de comandos para administrar usuarios: \textit{mqttusers.example}.
 	\item La carpeta \textit{log} contiene el archivo \textit{mosquitto.log} donde se registran todos los logs del servicio y que sirven para hacer un \textit{debug} o \textit{test} del mismo.	
 \end{itemize}
 
@@ -653,7 +653,7 @@ Como se describió en el capítulo \ref{Chapter1} Cada nodo representa uno o má
 A continuación se describen los nodos y sus estados utilizados:
 
 \begin{itemize}
-\item Nodo 1, ``mostrador``: este nodo cumple la función comunicar a la API REST por medio de MQTT el número de tarjeta que ha sido leída en el mostrador de atención a clientes de la empresa. De esta manera la API REST se encargará de asignar los estados ``espera`` o ``retirado`` a las órdenes de trabajo según corresponda.
+\item Nodo 1, ``mostrador``: este nodo cumple la función de comunicar a la API REST por medio de MQTT el número de tarjeta que ha sido leída en el mostrador de atención a clientes de la empresa. De esta manera la API REST se encargará de asignar los estados ``espera`` o ``retirado`` a las órdenes de trabajo según corresponda.
 
 \item Nodo 2, ``proceso``: este nodo se encarga de comunicar a la API REST que debe cambiar el estado de la órden de trabajo a ``proceso``, la API REST reconoce que el mensaje proviene de este nodo por el ``topic`` por el cual se envía el mensaje, y consulta a la base de datos qué órden de trabajo tiene el número de tarjeta recibida para ejecutar la actualización.
 
@@ -669,7 +669,7 @@ De esta manera el ciclo de lecturas de los nodos para una órden de trabajo es e
 \item Nodo ``mostrador``, se asigna el estado ``retirado``.
 \end{enumerate}
 
-Cuando un nodo envía o recibe una señal MQTT emite alertas sonoras para informar al usuario si la operación correspondiente tuvo éxito o fracasó.En la figura \ref{fig:mqttsonidosnodos} se puede observar como se implementaron estas señales sonoras en los nodos. Además podemos ver que existen dos opciones de sonidos, una es en forma de una sola nota denominada en la tabla \textit{Sonidos Clásicos} y otra es en forma de una melodía denominada \textit{Melodías}. Se configura en cada nodo la opción deseada desde las variables de entorno. Además se realiza en el código una validación para asegurarse que el tipo de \textit{buzzer} instalado es compatible con la opción \textit{Melodía}, en caso que no lo sea se ejecuta por defecto la opción \textit{Sonidos Clásicos}
+Cuando un nodo envía o recibe una señal MQTT emite alertas sonoras para informar al usuario si la operación correspondiente tuvo éxito o fracaso. En la figura \ref{fig:mqttsonidosnodos} se puede observar cómo se implementaron estas señales sonoras en los nodos. Además podemos ver que existen dos opciones de sonidos, una es en forma de una sola nota denominada en la tabla \textit{Sonidos Clásicos} y otra es en forma de una melodía denominada \textit{Melodías}. Se configura en cada nodo la opción deseada desde las variables de entorno. Además se realiza en el código una validación para asegurarse que el tipo de \textit{buzzer} instalado es compatible con la opción \textit{Melodía}, en caso que no lo sea se ejecuta por defecto la opción \textit{Sonidos Clásicos}
 
 \begin{figure}[H]
 	\centering
@@ -683,7 +683,7 @@ Cuando un nodo envía o recibe una señal MQTT emite alertas sonoras para inform
 \subsection{MQTT en API REST}
 \label{subsec:mqttapi}
 
-Se definió en la estructura de la API REST, descripta en el capítulo \ref{subsec:apipatron}, una sóla ruta de entrada en el archivo principal de configuración \textit{server.js}, dónde se realiza la conexión al \textit{broker} MQTT y se subscribe a todos los \textit{topics} utilizando para ello el símbolo \#. 
+Se definió en la estructura de la API REST, descrita en el capítulo \ref{subsec:apipatron}, una sóla ruta de entrada en el archivo principal de configuración \textit{server.js}, dónde se realiza la conexión al \textit{broker} MQTT y se subscribe a todos los \textit{topics} utilizando para ello el símbolo \#. 
 
 Configuración y conexión a \textit{broker} MQTT:
 \begin{lstlisting}[label=cod:mqttapiconect,caption= Configuración y conexión a \textit{broker} MQTT en API REST.]
@@ -723,20 +723,20 @@ Subscripción a todos los \textit{topics}:
     })
 \end{lstlisting}
 
-En el código \ref{cod:mqttapisub}, en la linea 2 se trae desde las variables de entorno el \textit{topic} correspondiente. Luego se inicia la conexión con el método \textit{on} y se realiza la subscripción con el método \textit{subscribe}. 
+En el código \ref{cod:mqttapisub}, en la línea 2 se trae desde las variables de entorno el \textit{topic} correspondiente. Luego se inicia la conexión con el método \textit{on} y se realiza la suscripción con el método \textit{subscribe}. 
 
 Luego los mensajes se rutean a un controlador MQTT que procesa todos los mensajes y siguiendo un flujo condicional realiza las acciones correspondientes.
 
 A continuación se presenta un diagrama del flujo del código fuente para resolver los procesos según el mensaje MQTT recibido:
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=.50]{./Figures/mqtt-controller-api.png}
 	\caption{Flujo de código fuente para MQTT en API REST.}
 	\label{fig:mqttcontrollerapi}
 \end{figure}
 
-Como puede observarse en la figura \ref{fig:mqttcontrollerapi} las validaciones dependen tanto del \textit{topic} recibido como del estado de la tarjeta. De acuerdo a eso se realizan los procesos correspondientes y se devuelve siempre un mensaje MQTT al nodo emisor el cual, de acuerdo al mensaje recibido, emitira una señal sonora a travez del \textit{buzzer} para informar al usuario si la acción tuvo éxito o no.
+Como puede observarse en la figura \ref{fig:mqttcontrollerapi} las validaciones dependen tanto del \textit{topic} recibido como del estado de la tarjeta. De acuerdo a eso se realizan los procesos correspondientes y se devuelve siempre un mensaje MQTT al nodo emisor el cual, de acuerdo al mensaje recibido, emitirá una señal sonora a través del \textit{buzzer} para informar al usuario si la acción tuvo éxito o no.
 
 
 \section{API para mensajería}
@@ -744,20 +744,20 @@ Como puede observarse en la figura \ref{fig:mqttcontrollerapi} las validaciones 
 
 Para el envío de mensajes por la aplicación \textit{WhatsApp} \cite{whatsapp} se utilizó una API adicional \cite{api-whatsapp-ts} la cual fue personalizada para las necesidades de este sistema.
 
-En esta sección se detalla como se implementó una API de mensajería para \textit{WhatsApp}.
+En esta sección se detalla cómo se implementó una API de mensajería para \textit{WhatsApp}.
 
 Esta API permite al usuario de la aplicación conectarse a \textit{WhatsApp} con su teléfono móvil y enviar mensajes desde la aplicación a los clientes de manera automática.
 
 \subsection{Implementación}
 \label{subsec:apimessengerimplementación}
 
-Para implementar está API se creo un conenedor en Docker de manera tal de separar este servicio del resto de los demás siguiendo una arquitectura de tipo microservicios \cite{microservices-docs}.
+Para implementar está API se creó un contenedor en Docker de manera tal de separar este servicio del resto de los demás siguiendo una arquitectura de tipo microservicios \cite{microservices-docs}.
 
-El patrón de desarrollo es similar al de la API REST detallada en el capitulo \ref{sec:arquitecturaapirest} y también está desarrollada en Node.js y Express, por lo que su personalización fue sensilla para este trabajo.
+El patrón de desarrollo es similar al de la API REST detallada en el capítulo \ref{sec:arquitecturaapirest} y también está desarrollada en Node.js y Express, por lo que su personalización fue sencilla para este trabajo.
 
-Se modificó el código fuente de la API para poder autenticarse desde el frontend al servicio de \textit{WhatsApp}, haciendo que el frontend pueda realizar una petición por medio del protocolo HTTP y que la API devuelva un código QR \cite{qr-code} en formato SGV \cite{svg-format} para que el usuario pueda realizar la conexión. 
+Se modificó el código fuente de la API para poder autenticarse desde el frontend al servicio de \textit{WhatsApp}, permitiendo que desde el frontend se pueda realizar una petición por medio del protocolo HTTP y que la API devuelva un código QR \cite{qr-code} en formato SVG \cite{svg-format} para que el usuario pueda realizar la conexión. 
 
-En el ruteo del proyecto se añadió un endpoint para obtener un codigo QR de autenticación:
+En el ruteo del proyecto se añadió un endpoint para obtener un código QR de autenticación:
 
 \begin{lstlisting}[label=cod:apimessengerroute,caption=Endpoint para obtener código QR.]
 router.get("/", leadCtrl.getQrCode);
@@ -792,7 +792,7 @@ Para el desarrollo de las interfaces de usuario se utilizó el framework Ionic \
 \subsection{Patrón de desarrollo}
 \label{subsec:frontpatron}
 
-Se implementó el patrón de diseño MVC \citep{mvc} \textit{(Modelo-Vista-Controlador)} para estructurar la aplicaciones web. Este patrón divide la aplicación en tres capas principales: el modelo, el cual representa los datos y la lógica de negocio, la vista, que representa las interfaces de usuario, y el controlador, que actúa como intermediario entre la vista y el modelo.
+Se implementó el patrón de diseño MVC \citep{mvc} \textit{(Modelo-Vista-Controlador)} para estructurar las aplicaciones web. Este patrón divide la aplicación en tres capas principales: el modelo, el cual representa los datos y la lógica de negocio, la vista, que representa las interfaces de usuario, y el controlador, que actúa como intermediario entre la vista y el modelo.
 
 También se utilizaron otros patrones de diseño, como el patrón de ``Inyección de Dependencias`` \citep{dependency-injection} \textit{Dependency Injection Pattern} y el patrón de ``Observador`` \citep{observer-pattern} \textit{Observer Pattern}. Estos patrones son utilizados para mejorar la escalabilidad, la flexibilidad y la mantenibilidad de las aplicaciones desarrolladas con Ionic.
 
@@ -816,7 +816,7 @@ En la figura \ref{fig:frontmvc} podemos observar una representación del flujo u
 Por ejemplo, para el desarrollo del módulo de listar órdenes de trabajo implementando este patrón, el flujo sería el siguiente:
 
 \begin{enumerate}
-\item Usuario solicita a traves de su navegador la URL \textit{ordenestrabajo/listar}.
+\item Usuario solicita a través de su navegador la URL \textit{ordenestrabajo/listar}.
 \item El \textit{routing} mapea la URL al controlador \textit{listar.page.ts} que se encuentra en el módulo \textit{listar.module.ts}. El controlador llama al servicio \textit{ordentrabajo.services.ts}.
 \item El servicio hace una petición HTTP por medio del método GET a una ruta de la API de \textit{backend}. 
 \item La API responde con los datos de la lista en formato JSON.
@@ -830,7 +830,7 @@ De esta manera se implementó este patrón de desarrollo para todos los componen
 \subsection{Interfaces de usuario}
 \label{subsec:frontinterfaces}
 
-Teniendo en cuenta el flujo general del sistema presentado en el caítulo \ref{sec:flujogeneral} y los requerimientos para un sistema que sea amigable con el usuario y de diseño adaptable a diferentes dispositivos, se desarrollarón las interfaces de usuario utilizando los componentes nativos de Ionic para diseño de interfaces junto a CSS para personalizar estilos y javascript para funcionalidades. 
+Teniendo en cuenta el flujo general del sistema presentado en el capítulo \ref{sec:flujogeneral} y los requerimientos para un sistema que sea amigable con el usuario y de diseño adaptable a diferentes dispositivos, se desarrollaron las interfaces de usuario utilizando los componentes nativos de Ionic para diseño de interfaces junto a CSS para personalizar estilos y javascript para funcionalidades. 
 
 Las interfaces de usuario que se desarrollaron fueron:
 
@@ -877,7 +877,7 @@ Para cargar o buscar los datos de clientes se utilizó el mismo componente, reut
 	\label{fig:nuevacliente1}
 \end{figure}
 
-En la figura \ref{fig:nuevacliente2} podemos observar el resultado de una búsqueda de clientes. Se selecciona el que se desea asignar y se hace click en ``CONFIRMAR``.
+En la figura \ref{fig:nuevacliente2} podemos observar el resultado de una búsqueda de clientes. Se selecciona el que se desea asignar y se hace clic en ``CONFIRMAR``.
 
 \begin{figure}[H]
 	\centering
@@ -952,9 +952,9 @@ Las opciones en esta interfaz son:
 
 \item Rango de días: en la parte superior de la tabla se pueden observar 5 botones, estos representan al rango de días hacia atrás que se desea mostrar los registros. Además la tabla muestra al usuario una paginación navegable en la parte inferior si los registros son mayores a 25. El último botón de este grupo corresponde a mostrar el historial completo de registros.
 
-\item Ordenamiento por campos: al hacer clic en la cabecera de la tabla se puede ordenar los elementos de manera múltiple, por ejemplo en primer órden la fecha de entrega y en segundo órden el apellido del cliente, así susesivamente en múltiples campos.
+\item Ordenamiento por campos: al hacer clic en la cabecera de la tabla se puede ordenar los elementos de manera múltiple, por ejemplo en primer órden la fecha de entrega y en segundo órden el apellido del cliente, así sucesivamente en múltiples campos.
 
-\item Orden de columnas: se pueden ordenar los campos haciendo clic y arrastrando el campo deseado al órden correspondiente. Por ejemplo se puede arrastrar el campo ``Estado`` en la primer columna.
+\item Órden de columnas: se pueden ordenar los campos haciendo clic y arrastrando el campo deseado al órden correspondiente. Por ejemplo se puede arrastrar el campo ``Estado`` en la primera columna.
 \end{itemize}
 
 Para una mejor visualización de los estados de los trabajos se asignó un color específico para cada estado, de esta manera es más fácil identificar rápidamente el estado de los trabajos. Se utilizó la siguiente paleta de colores para los estados:
@@ -984,7 +984,7 @@ En las figuras \ref{fig:listado2} y \ref{fig:listado3} vemos los alertas de tipo
 	\label{fig:listado3}
 \end{figure}
 
-Como se detalló en el caítulo \ref{sec:apimessenger} el mensaje llegá al cliente en su aplicación \textit{WhatsApp} como si fuera enviado desde el teléfono móvil del usuario, por lo que mostrará su número o el nombre por el cual el cliente lo tenga agendado, ya que la API de mensajería utiliza los servicios de \textit{WhatsApp} para hacer el envío y el usuario debe autenticarse previamente con su teléfono móvil y el código QR para utilizar el servicio.
+Como se detalló en el capítulo \ref{sec:apimessenger} el mensaje llegá al cliente en su aplicación \textit{WhatsApp} como si fuera enviado desde el teléfono móvil del usuario, por lo que mostrará su número o el nombre por el cual el cliente lo tenga agendado, ya que la API de mensajería utiliza los servicios de \textit{WhatsApp} para hacer el envío y el usuario debe autenticarse previamente con su teléfono móvil y el código QR para utilizar el servicio.
 
 \subsubsection{Retirar órden de trabajo}
 \label{subsubsec:frontretirar}
@@ -993,7 +993,7 @@ Para retirar una órden se utiliza una metodología similar a la de agregar una 
 
 El usuario puede modificar el precio de la órden en este punto y se actualizarán los datos de saldo. También puede agregar detalles para el retiro de la órden que quedarán registrados en la base de datos.
 
-Una vez confirmado el retiro se guradan los registros y estados correspondientes y se asigna el estado ``libre`` a la tarjeta para que pueda ser reutilizada para una futura órden de trabajo.
+Una vez confirmado el retiro se guardan los registros y estados correspondientes y se asigna el estado ``libre`` a la tarjeta para que pueda ser reutilizada para una futura órden de trabajo.
 
 De esta manera finaliza el ciclo de un repuesto que ingresa a la empresa, es procesado y retirado luego por el cliente.
 
@@ -1032,7 +1032,7 @@ En la figura \ref{fig:frontqr} podemos ver la interfaz para autenticarse mediant
 
 Para el despliegue de los servicios desarrollados se implementó una arquitectura de contenedores utilizando Docker y Docker Compose en una Raspberry Pi 4.
 
-Para cada proyecto se creo un archivo Dockerfile para el manejo del contenedor correspondiente, a su vez se centraliza el despliegue de estos contenedores en un archivo \textit{yml} de Docker Compose, donde también se levantan servicios directamente sin utilizar un Dockerfile particular. 
+Para cada proyecto se creó un archivo Dockerfile para el manejo del contenedor correspondiente, a su vez se centraliza el despliegue de estos contenedores en un archivo \textit{yml} de Docker Compose, donde también se levantan servicios directamente sin utilizar un Dockerfile particular. 
 
 En esta sección se detalla la implementación de contenedores y servicios en el servidor.
 
@@ -1156,7 +1156,40 @@ En la figura \ref{fig:diagramared} podemos observar el diagrama de red del siste
 
 En el servidor se implementó una placa Raspberry Pi 4. Para esta placa se imprimió un gabinete personalizado utilizando una impresora de tipo 3D, se incluyó además un espacio adicional en el gabinete para agregar un disco tipo SSD para ampliar las capacidades de la placa.
 
+
 Para los nodos se utilizó el microcontrolador NodeMCU Esp32, el sensor de radiofrecuenta MRC522 y un buzzer sonoro. El diseño del circuito en un \textit{software} especializado y la impresión de la placa PCB estuvo a cargo de colaboradores.  
+
+Para realizar el \textit{build} o compilación del código fuente en el microcontrolador NodeMCU ESP32 se utilizó el \textit{framework} PlatformIO y el IDE Visual Studio Code (VSCODE).
+
+En la figura \ref{fig:platformio-build} podemos observar el resultado de realizar el \textit{build}  o compilación del código fuente en la ESP32 utilizando PlatformIO y VSCode.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/platformio-build.png}
+	\caption{Build en PlatformIO.}
+	\label{fig:platformio-build}
+\end{figure}
+
+En la figura \ref{fig:platformio-upload} podemos observar el resultado de realizar el \textit{upload} o el copiado del código ya compilado a la ESP32 en PlatformIO. Además se detalla la instalación de las librerías que se utilizan en el proyecto.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/platformio-upload.png}
+	\caption{Upload en PlatformIO.}
+	\label{fig:platformio-upload}
+\end{figure}
+
+Finalmente, en la figura \ref{fig:platformio-connect} podemos observar el resultado del código fuente ejecutándose en el microcontrolador y los detalles de la conexión exitosa a la red Wi-Fi y al \textit{broker} MQTT, indicando las direcciones IP y los puertos de conexión, además se muestran los mensajes que se configuraron en el código como el nombre de usuario y del nodo, la dirección IP y MAC de la ESP32 y el tópico MQTT al cual está suscripto. Esto se realiza mediante el \textit{framework}
+ PlatformIO en modo monitor y con la ESP32 conectado a la PC mediante un cable USB de datos.
+ 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/platformio-connect.png}
+	\caption{Upload en PlatformIO.}
+	\label{fig:platformio-connect}
+\end{figure}
+
+
 
 
 % La idea de esta sección es resaltar los problemas encontrados, los criterios utilizados y la justificación de las decisiones que se hayan tomado.
