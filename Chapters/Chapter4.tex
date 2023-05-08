@@ -33,7 +33,7 @@ En la figura \ref{fig:entornos} podemos observar cada entorno y las tareas reali
 \section{Ensayos sobre la API}
 \label{sec:ensayos-api}
 
-Para realizar las pruebas en las comunicaciones HTTP y validar la funcionalidad de la API de \textit{backend} y la API \textit{messenger}, se utilizó la herramienta de prueba de API llamada Insomnia, la cual permite hacer solicitudes utilizando los métodos HTTP.
+Para realizar las pruebas en las comunicaciones HTTP y validar la funcionalidad de la API de \textit{backend} y la API \textit{messenger}, se utilizó la herramienta de prueba de API llamada Insomnia \cite{insomnia}, la cual permite hacer solicitudes utilizando los métodos HTTP.
 
 Se creó la estructura de \textit{endpoints} del sistema separadas en carpetas y archivos según módulos o funcionalidad y se declararon los diferentes entornos de prueba (\textit{dev, test y prod}) descritos en la sección anterior. 
 
@@ -72,7 +72,7 @@ En la figura \ref{fig:insomnia-request-2} vemos la respuesta a la petición, dó
 \section{Ensayos sobre el sistema}
 \label{sec:ensayos-nodos}
 
-Primeramente, durante la etapa de desarrollo \textit{dev} y \textit{test}, se fueron realizando pruebas a medida que se avanzaba en el desarrollo. Para esto se utilizaron placas de prototipo \textit{protoboard} para los nodos y se ejecutaron los sistemas en modo local utilizando Nodemon y posteriormente Docker y Docker Compose, como se describe en la sección \ref{sec:entornos} del presente capítulo.
+Primeramente, durante la etapa de desarrollo \textit{dev} y \textit{test}, se fueron realizando pruebas a medida que se avanzaba en el desarrollo. Para esto se utilizaron placas de prototipo \textit{protoboard} para los nodos y se ejecutaron los sistemas en modo local utilizando Nodemon \cite{nodemon} y posteriormente Docker y Docker Compose, como se describe en la sección \ref{sec:entornos} del presente capítulo.
 
 Luego de superadas las pruebas iniciales se procedió a las pruebas funcionales del sistema. Estas se realizaron sobre el sistema completo en ejecución, ya que todas las partes del sistema interactúan entre sí. 
 
@@ -210,13 +210,13 @@ En esta sección verificamos el cambio de estado de la órden de trabajo creada 
 
 Pasamos la tarjeta RFID correspondiente a la órden de trabajo creada en la sección previa por el nodo \textit{proceso} y verificamos los resultados en el log de la API \textit{backend}.
 
-En la figura \ref{fig:ensayolistado} podemos observar los resultados del \textit{log}.
+En la figura \ref{fig:cambioestado-api-log} podemos observar los resultados del \textit{log}.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/ensayo-1/12.cambioestado-api-log.png}
 	\caption{\textit{Logs} de API en cambio de estado.}
-	\label{fig:ensayolistado}
+	\label{fig:cambioestado-api-log}
 \end{figure}
 
 En color verde vemos los registros referentes a la comunicación MQTT, en la primer línea resaltada vemos la recepción del mensaje indicada con el mensaje \textit{Receive Message} y los detalles del mismo donde indica el número de tajeta, el nodo emisor y el estado o acción a ejecutar.
@@ -225,7 +225,7 @@ Luego tenemos resaltado en amarillo las líneas que indícan los procesos sobre 
 
 Por último vemos la línea resaltada en verde que indíca el envío de un mensaje de confirmación MQTT al nodo emisor para que se realice el alerta sonoro correspondiente.
 
-Navegamos a la pantalla \textit{Listado} de la aplicación \textit{web} y verificamos el cambio de estado. En la figura \ref{fig:ensayolistado} podemos observar el resultado. La órden a sido actualizada a estado \textit{PROCESO} y cambió el color de la fila correspondiente.
+Navegamos a la pantalla \textit{Listado} de la aplicación \textit{web} y verificamos el cambio de estado. En la figura \ref{fig:ensayolistadoweb} podemos observar el resultado. La órden a sido actualizada a estado \textit{PROCESO} y cambió el color de la fila correspondiente.
 
 \begin{figure}[H]
 	\centering
@@ -309,13 +309,13 @@ En la figura \ref{fig:ensayoconfirmacionmensaje} vemos el modal para confirmaci�
 	\label{fig:ensayoconfirmacionmensaje}
 \end{figure}
 
-En la figura \ref{fig:ensayomensajecel2} podemos ver el mensaje recibido.
+En la figura \ref{fig:ensayomensajewcel2} podemos ver el mensaje recibido.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=.20]{./Figures/ensayo-1/15.qr-api-1.jpeg}
 	\caption{Mensaje de \textit{Whatsapp} recibido}
-	\label{fig:ensayomensajecel2}
+	\label{fig:ensayomensajewcel2}
 \end{figure}
 
 En la figura \ref{fig:ensayomensajefinalizado} observamos el cambio de color a verde opaco de la fila correspondiente. Esto indica que el cliente ya fue informado respecto a su órden de trabajo.
