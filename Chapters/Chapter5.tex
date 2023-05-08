@@ -13,17 +13,34 @@
 
 \section{Conclusiones generales }
 
-La idea de esta sección es resaltar cuáles son los principales aportes del trabajo realizado y cómo se podría continuar. Debe ser especialmente breve y concisa. Es buena idea usar un listado para enumerar los logros obtenidos.
+En este capítulo se detallan cuáles son los principales aportes del trabajo realizado y cómo se podría continuar. 
 
-Algunas preguntas que pueden servir para completar este capítulo:
+\subsection{Resultados obtenidos}
 
-\begin{itemize}
-\item ¿Cuál es el grado de cumplimiento de los requerimientos?
-\item ¿Cuán fielmente se puedo seguir la planificación original (cronograma incluido)?
-\item ¿Se manifestó algunos de los riesgos identificados en la planificación? ¿Fue efectivo el plan de mitigación? ¿Se debió aplicar alguna otra acción no contemplada previamente?
-\item Si se debieron hacer modificaciones a lo planificado ¿Cuáles fueron las causas y los efectos?
-\item ¿Qué técnicas resultaron útiles para el desarrollo del proyecto y cuáles no tanto?
-\end{itemize}
+Se desarrolló un sistema de seguimiento de procesos para las órdenes de trabajo en una empresa de rectificaciones de motopartes de Resitencia, Chaco. El sistema fue implementado en diciembre de 2022. 
+
+Se logró implementar con éxito un servidor local con todos los servicios desarrollados y con los servicios de terceros. Además se configuró el acceso remoto para su mantenimiento y actualizacion.
+
+Se instaló una red local para el sistema con los nodos con tecnología RFID y comunicacion MQTT con el servidor.
+
+El sistema integral aporta un mejor seguimiento y análisis de los trabajos que se realizan día a día en la empresa.
+
+\subsection{Cumplimiento de los requerimientos}
+
+En el capitulo \ref{sec:objetivosyalcance} se plantearon los requerimientos mínimos que se debían cumplir en el presente trabajo. Al hacer un análisis final del sistema con sus ensayos y resultados obtenidos se concluye que se lograrón alcanzar todos estos objetivos con éxito. 
+
+En cuanto a los riesgos, el único que se presentó fue el no poder cumplir con el tiempo de entrega planificado. En este caso se pudo acordar sin inconvenientes con el cliente la entrega del sistema completo fuera de la fecha prevista. 
+
+\subsection{Modificaciones a lo planificado}
+Cuando se presentaron los primeros avances al cliente se realizó una modificación en el sistema a fines de evitar costos de mantenimiento. Se reemplazó el desarrollo de una interfaz pública de consulta de órdenes de trabajo, con acceso desde internet sin autenticación, por el servicio de mensajería detallado en los capítulos \ref{subsec:apimessenger} y \ref{subsec:apimessengerimplementación}. El cliente optó por la opción de mensajería para evitar costos de alojamiento web o de servicios de IP pública y direccionamiento DNS y para tener un contacto directo con el cliente. 
+
+%\begin{itemize}
+%\item ¿Cuál es el grado de cumplimiento de los requerimientos?
+%\item ¿Cuán fielmente se puedo seguir la planificación original (cronograma incluido)?
+%\item ¿Se manifestó algunos de los riesgos identificados en la planificación? ¿Fue efectivo el plan de mitigación? ¿Se debió aplicar alguna otra acción no contemplada previamente?
+%\item Si se debieron hacer modificaciones a lo planificado ¿Cuáles fueron las causas y los efectos?
+%\item ¿Qué técnicas resultaron útiles para el desarrollo del proyecto y cuáles no tanto?
+%\end{itemize}
 
 
 %----------------------------------------------------------------------------------------
@@ -31,4 +48,12 @@ Algunas preguntas que pueden servir para completar este capítulo:
 %----------------------------------------------------------------------------------------
 \section{Próximos pasos}
 
-Acá se indica cómo se podría continuar el trabajo más adelante.
+Durante la etapa de ensayos y una vez instalado el sistema en producción se fueron realizando anotaciones para mejoras detectadas y recibiendo retroalimentación de los usuarios del sistema. Con estos datos se realizó una lista con posibles mejoras al sistema, alguna de ellas son:
+
+\begin{itemize}
+\item Diseño gráfico: mejora de experiencia de usuario e interfaz de usuario.
+\item Desarrollo de un nodo RFID móvil con pantalla integrada.
+\item Desarrollo de una sección de administración.
+\item Reportes gráficos.
+\item Desarrollo de una sección para gestión de caja.
+\end{itemize}

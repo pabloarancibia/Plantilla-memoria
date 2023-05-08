@@ -194,7 +194,7 @@ En la figura \ref{fig:ensayonueva10-2} podemos ver el \textit{log} de la API.
 
 Resaltamos en verde el proceso que inserta los registros en la base de datos en el modelo \textit{OrdenTrabajo}. En amarillo vemos el proceso que actualiza los datos de la tarjeta, principalmente se actualiza su estado a \textit{en uso} y se la relaciona a la órden de trabajo creada.
 
-Finalmente navegamos en la aplicación web hacia la pestaña \textit{Listado} donde podemos verificar la órden creada. En la figura \ref{fig:ensayolistado} podemos ver, resaltado en amarillo, el nuevo registro y a la derecha, resaltado en verde, podemos verificar en la consola del navegador web que el observador de Ionic inició correctamente. Este observador se encarga de las actualizaciones de estado en tiempo real de las órdenes que vemos en pantalla.
+Finalmente navegamos en la aplicación web hacia la pestaña \textit{Listado} donde podemos verificar la órden creada. En la figura \ref{fig:ensayolistado} podemos ver, resaltado en amarillo, el nuevo registro y a la derecha, resaltado en verde, podemos verificar en la consola del navegador web que el observador de Ionic se inició correctamente. Este observador se encarga de las actualizaciones de estado de las órdenes que vemos en pantalla.
 
 \begin{figure}[H]
 	\centering
@@ -203,17 +203,193 @@ Finalmente navegamos en la aplicación web hacia la pestaña \textit{Listado} do
 	\label{fig:ensayolistado}
 \end{figure}
 
+\subsection{Cambio a estado proceso}
+\label{subsec:ensayoaproceso}
 
-Cargo nueva OT
-- Cambio estado OT a proceso
-- Cambio estado OT a finalizado
-- Logueo en WhatsApp
-- Envío de mensaje WhatsApp
-- Reenvío de mensaje en WhatsApp
-- Retiro OT
+En esta sección verificamos el cambio de estado de la órden de trabajo creada previamente. Asignaremos el estado \textit{en proceso}.
 
-\section{Resultados}
-\label{sec:resultados}
+Pasamos la tarjeta RFID correspondiente a la órden de trabajo creada en la sección previa por el nodo \textit{proceso} y verificamos los resultados en el log de la API \textit{backend}.
+
+En la figura \ref{fig:ensayolistado} podemos observar los resultados del \textit{log}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/12.cambioestado-api-log.png}
+	\caption{\textit{Logs} de API en cambio de estado.}
+	\label{fig:ensayolistado}
+\end{figure}
+
+En color verde vemos los registros referentes a la comunicación MQTT, en la primer línea resaltada vemos la recepción del mensaje indicada con el mensaje \textit{Receive Message} y los detalles del mismo donde indica el número de tajeta, el nodo emisor y el estado o acción a ejecutar.
+
+Luego tenemos resaltado en amarillo las líneas que indícan los procesos sobre la base de datos, en este caso son dos actualizaciones o \textit{UPDATES}, una sobre la tabla \textit{OrdenTrabajo} y la otra sobre la tabla \textit{Tarjeta}, en ambas se actualiza el estado utilizando al relación con la tabla \textit{Estado}.
+
+Por último vemos la línea resaltada en verde que indíca el envío de un mensaje de confirmación MQTT al nodo emisor para que se realice el alerta sonoro correspondiente.
+
+Navegamos a la pantalla \textit{Listado} de la aplicación \textit{web} y verificamos el cambio de estado. En la figura \ref{fig:ensayolistado} podemos observar el resultado. La órden a sido actualizada a estado \textit{PROCESO} y cambió el color de la fila correspondiente.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/12.cambioestado-listado.png}
+	\caption{Listado de órdenes de trabajo}
+	\label{fig:ensayolistadoweb}
+\end{figure}
+
+\subsection{Cambio a estado finalizado}
+\label{subsec:ensayoafinalizado}
+
+En esta sección verificamos el cambio de estado de la órden de trabajo al estado \textit{finalizado}.
+
+Siguiendo el procedimiento pasamos la tarjeta RFID correspondiente por el nodo \textit{finalizado} y verificamos los resultados en el log de la API \textit{backend}.
+
+En la figura \ref{fig:ensayofinalizadoapi} vemos el l\textit{log}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/13.finalizado-api-logs.png}
+	\caption{\textit{Logs} de Api en finalizado.}
+	\label{fig:ensayofinalizadoapi}
+\end{figure}
+
+Vemos resaltado en verde la confirmación de la recepción del mensaje MQTT en el tópico nodo/cambiarestado, con el cuerpo del mensaje en formato JSON. En este caso el estado es finalizado, lo que indica a que estado debe cambiar la órden de trabajo.
+
+En amarillo resaltamos los procesos sobre la base de datos, nuevamente se realiza \textit{UPDATE} en las tablas \textit{OrdenTrabajo} y \textit{Tarjeta} en el campo \textit{EstadoId} que es la clave foranea de la tabla \textit{Estado}.
+
+Por último se envía la confirmación por MQTT al nodo receptor, en este caso el nodo \textit{finalizado}.
+
+En la figura \ref{fig:ensayofinalizadolistado} vemos la aplicación \textit{web} en la sección \textit{Listado}, podemos confirmar el cambio de estado correspondiente en la tabla, el cambio de color de la fila y la correcta visualización del botón con el logo de la aplicación de mensajería.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/14.finalizado-listado.png}
+	\caption{Listado de órdenes de trabajo.}
+	\label{fig:ensayofinalizadolistado}
+\end{figure}
+
+
+\subsection{Envío de mensaje de texto}
+\label{subsec:ensayomensaje}
+
+Verificamos la autenticación al servicio de mensajería a través del código QR. 
+
+En la aplicación \textit{web} ingresamos a la sección QR, primero hacemos clic en \textit{Actualizar} para verificar la funcion para renovar el código QR y luego escaneamos el código con un \textit{smartphone}.
+
+En la figura \ref{fig:ensayoqr} vemos la interfaz que muestra el botón para actualizar el código QR y el código correspondiente. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/15.qr.png}
+	\caption{Interfaz de código QR.}
+	\label{fig:ensayoqr}
+\end{figure}
+
+En la figura \ref{fig:ensayomensaje1} observamos el resultado de una correcta autenticación. Debido a que la API de mensajería utiliza una biblioteca del navegador \textit{Google Chrome}, en el listado aparece este navegador como dispositivo vinculado.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.20]{./Figures/ensayo-1/15.qr-api.jpeg}
+	\caption{Vinculación a \textit{Whatsapp} desde un \textit{Smartphone}}
+	\label{fig:ensayomensaje1}
+\end{figure}
+
+En la figura \ref{fig:ensayomensajeapi} podemos observar el \textit{log} de la API \textit{Messenger} donde indica, resaltado en amarillo, un primer logout referente a la actualización del código QR realizada, luego vemos el mensaje \textit{LOGIN SUCCESS} que indica que la autenticación se realizó con éxito.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.70]{./Figures/ensayo-1/15-qr-api.png}
+	\caption{\textit{Logs} de API \textit{Messenger}.}
+	\label{fig:ensayomensajeapi}
+\end{figure}	
+
+En la figura \ref{fig:ensayoconfirmacionmensaje} vemos el modal para confirmación de envío de mensaje.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/14.mensaje-confirmacion.png}
+	\caption{Confirmación de envío de mensaje.}
+	\label{fig:ensayoconfirmacionmensaje}
+\end{figure}
+
+En la figura \ref{fig:ensayomensajecel2} podemos ver el mensaje recibido.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.20]{./Figures/ensayo-1/15.qr-api-1.jpeg}
+	\caption{Mensaje de \textit{Whatsapp} recibido}
+	\label{fig:ensayomensajecel2}
+\end{figure}
+
+En la figura \ref{fig:ensayomensajefinalizado} observamos el cambio de color a verde opaco de la fila correspondiente. Esto indica que el cliente ya fue informado respecto a su órden de trabajo.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/17.finalizado.png}
+	\caption{Listado de órdenes de trabajo.}
+	\label{fig:ensayomensajefinalizado}
+\end{figure}
+
+Probamos la funcionalidad de reenvio de mensaje. En este caso nos vuelve a mostrar un modal de confirmación de envío pero con el texto \textit{Reenviar Mensaje}. Confirmamos el mensaje y verificamos en el \textit{smartphone} la recepción. En la figura \ref{fig:ensayomensajecel2} vemos el resultado.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.20]{./Figures/ensayo-1/15.qr-api-2.jpeg}
+	\caption{Mensaje de \textit{Whatsapp} recibido}
+	\label{fig:ensayomensajecel2}
+\end{figure}
+
+Por último verificamos en la API \textit{backend} el \textit{log} que indica si el cliente fue informado de la finalización de su órden de trabajo.
+
+En la figura \ref{fig:ensayomensajeapilog} vemos resaltada en amarillo la línea que confirma la actualización del campo \textit{informado} en la tabla \textit{OrdenTrabajo}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.50]{./Figures/ensayo-1/20.mensaje-api-log.png}
+	\caption{Mensaje de \textit{Whatsapp} recibido}
+	\label{fig:ensayomensajeapilog}
+\end{figure}
+
+
+\subsection{Cambio a estado retirado}
+\label{subsec:ensayoretiro}
+
+La finalización del ciclo de estados de órdenes de trabajo se da cuando el cliente pasa a retirar su repuesto. En este caso el usuario del sistema debe ingresar a la sección \textit{Retirar} en la aplicación \textit{web}, activar el modo escucha con el botón \textit{Leer Tarjeta} y pasar la tarjeta RFID correspondiente por el nodo mostrador.
+
+En la figura \ref{fig:ensayoretirar-web-1} mostramos la interfaz para retirar una órden de trabajo.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/21.retirar-web-1.png}
+	\caption{Interfaz para retirar órden de trabajo.}
+	\label{fig:ensayoretirar-web-1}
+\end{figure}
+
+En la figura \ref{fig:ensayoretirar-web-2} mostramos la consola del navegador donde podemos observar los datos de la órden de trabajo recibidos desde la API, ya que cuando pasamos la tarjeta por el mostrador la API \textit{backend} recibe y procesa la información y luego esta es leída por la aplicación \textit{web}. Resaltado en verde podemos observar todos los datos de la órden de trabajo y resaltado en celeste podemos ver los datos de la tarjeta. estos datos son insertados en el formulario de retiro.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.50]{./Figures/ensayo-1/21.retirar-web-2.png}
+	\caption{Consola de \textit{debug} del navegador.}
+	\label{fig:ensayoretirar-web-2}
+\end{figure}
+
+En la figura \ref{fig:ensayoretirarapievento} podemos observar los registros en el \textit{log} de la API \textit{backend}. En verde vemos los datos correspondientes a la recepción del mensaje MQTT desde el nodo \textit{mostrador}. Recibimos el número de tajeta y la acción \textit{discriminar}. Luego de procesar la información , resaltamos en amarillo las líneas donde se confirma que se inserta en la base de datos el evento para que luego sea leído por la aplicación \textit{web} y se envía la respuesta por MQTT al nodo emisor, en este caso el nodo \textit{mostrador}.  
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/22.retirar-api-evento.png}
+	\caption{\textit{Logs} de recepción MQTT en API \textit{backend}.}
+	\label{fig:ensayoretirarapievento}
+\end{figure}
+
+Luego que en la aplicación \textit{web} se insertaron los datos de la órden de trabajo, se confirma finalmente el retiro. En la figura \ref{fig:ensayoretirarconfirmacionapi} podemos ver, resaltado en amarillo, los registros en el \textit{log} de la API \textit{backend} pertenecientes a la actualización de la tabla \textit{OrdenTrabajo} y \textit{Tarjeta}. 
+ 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ensayo-1/24.retirar-confirmacion-api.png}
+	\caption{\textit{Logs} de confirmación de retiro en API \textit{backend}.}
+	\label{fig:ensayoretirarconfirmacionapi}
+\end{figure}
+
+De esta manera finaliza el ciclo de una órden de trabajo en el sistema. Pudimos observar en cada paso los resultados y \textit{logs} obtenidos y así asegurar el buen funcionamiento de los diferentes servicios desarrollados e implementados.
 
 
 
