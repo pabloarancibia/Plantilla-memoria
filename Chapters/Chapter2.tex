@@ -116,7 +116,7 @@ En la figura \ref{fig:relddbb} se puede apreciar un ejemplo de un diagrama de ba
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=.30]{./Figures/relddbb.jpg}
+	\includegraphics[scale=.50]{./Figures/relddbb.png}
 	\caption{Diagrama base de datos relacional.}
 	\label{fig:relddbb}
 \end{figure}
@@ -198,18 +198,18 @@ Alguna de las principales ventajas de utilizar Sequelize son:
 \subsection{API messenger}
 \label{subsec:apimessenger}
 
-Para el envío de mensajes por la aplicación \textit{WhatsApp} \cite{whatsapp} se utilizó una API adicional \cite{api-whatsapp-ts}, denominada en este trabajo \textit{API Messenger} a fines de distinguirla de la API de \textit{backend} desarrollada.
+Para el envío de mensajes por la aplicación WhatsApp \cite{whatsapp} se utilizó una API adicional \cite{api-whatsapp-ts}, denominada en este trabajo API Messenger a fines de distinguirla de la API de backend desarrollada.
 
-Esta API presenta un desarrollo en un patrón modular de tipo DDD \textit{(Domain-Driven Design)}. La principal característica en este caso es la creación de capas de infraestructura, servicios y aplicaciones. Esto servirá en caso de cambiar el proveedor de mensajería \textit{WhatsApp} o agregar otro proveedor en paralelo, lo cual hace el sistema escalable y adaptable a diferentes necesidades y escenarios.
+Esta API presenta un desarrollo en un patrón modular de tipo DDD \textit{(Domain-Driven Design)}. La principal característica en este caso es la creación de capas de infraestructura, servicios y aplicaciones. Esto servirá en caso de cambiar el proveedor de mensajería WhatsApp o agregar otro proveedor en paralelo, lo cual hace el sistema escalable y adaptable a diferentes necesidades y escenarios.
 
-Para los requerimientos de este trabajo se personalizó el código fuente de la \textit{API Messenger} a fines de agregar características adicionales, se detalla esto en el capítulo \ref{sec:apimessenger}.
+Para los requerimientos de este trabajo se personalizó el código fuente de la API Messenger a fines de agregar características adicionales, se detalla esto en el capítulo \ref{sec:apimessenger}.
 
 \subsection{Portainer}
 \label{subsec:portainer}
 
-Portainer \citep{PortainerDocs} es una herramienta de administración de contenedores Docker \cite{WEBSITE:docker} que proporciona una interfaz web para administrar los contenedores y clústeres Docker. 
+Es una herramienta de administración de contenedores Docker \cite{WEBSITE:docker} que proporciona una interfaz web para administrar los contenedores y clústeres Docker.
 
-Proporciona una variedad de características útiles, incluyendo:
+Portainer \citep{PortainerDocs} proporciona una variedad de características útiles, incluyendo:
 
 \begin{itemize}
 \item Una interfaz web intuitiva y fácil de usar para administrar contenedores Docker, imágenes, volúmenes y redes.
@@ -222,22 +222,14 @@ Proporciona una variedad de características útiles, incluyendo:
 
 Para este trabajo se utilizó la herramienta solamente para el monitoreo de los contenedores y el control del uso de recursos de sistema de los mismos.
 
-En las figuras \ref{fig:portainer1} y \ref{fig:portainer2} podemos observar la interfaz gráfica de la herramienta.
+En la figura \ref{fig:portainer1} se puede observar el menú principal de la interfaz gráfica de la herramienta.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=.20]{./Figures/portainer-admin-1.png}
+	\includegraphics[scale=.50]{./Figures/portainer-admin-1.png}
 	\caption{Arquitectura API Rest.}
 	\label{fig:portainer1}
 \end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=.20]{./Figures/portainer-admin-1.png}
-	\caption{Arquitectura API Rest.}
-	\label{fig:portainer2}
-\end{figure}
-
 
 \section{Tecnologías frontend}
 \label{sec:frontend}
