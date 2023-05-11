@@ -107,7 +107,7 @@ El flujo inicia cuando el usuario recibe el repuesto y selecciona una tarjeta RF
 \subsection{Cambio de estado}
 \label{subsec:flujocambioestado}
 
-En la figura \ref{fig:flujocambioestado} podemos observar el flujo completo para un cambio de estado de una orden de trabajo.
+En la figura \ref{fig:flujocambioestado} se representa el flujo completo para un cambio de estado de una orden de trabajo.
 
 \begin{figure}[ht]
 	\centering
@@ -244,7 +244,7 @@ luego en las líneas 6 a la 19 se definen las relaciones que tendrá el modelo, 
 
 Como se menciona en la sección anterior, el archivo con la estructura inicial de migraciones se crea a través del CLI de Sequelize al momento de crear el modelo para una tabla, luego hay que personalizar esta estructura para que quede igual al modelo definido previamente. 
 
-A continuación, en el código \ref{sequelizemigrationcore} se representa una parte del código \textit{javascript} para la migración del modelo ``orden de trabajo".
+A continuación, en el código \ref{cod:sequelizemigrationcore} se representa una parte del código \textit{javascript} para la migración del modelo ``orden de trabajo".
 
 \begin{lstlisting}[label=cod:sequelizemigrationcore, caption= Código para migración en Sequelize.]
 'use strict';
@@ -322,7 +322,7 @@ const getOrdenesTrabajo = async (req, res)=>{
 
 En código \ref{cod:nuevoregistro} representa de manera resumida cómo crear un nuevo registro, se quitaron algunas partes del código que son relevantes a esta sección:
 
-\begin{lstlisting}[label=cod:nuevoregistro,caption=Código resumido para crear nuevo registro en la base de datos.]
+\begin{lstlisting}[label=cod:nuevoregistro,caption=Código para crear nuevo registro en la base de datos.]
 /**
  * Crear nueva orden de trabajo
  */
@@ -330,19 +330,13 @@ const nuevaOrdenTrabajo = async (req,res) => {
         const nuevaOrdenTrabajo = await OrdenTrabajo.create(
             req.body, 
             );
-  
-
-        return res.json(nuevaOrdenTrabajo);
-        
+        return res.json(nuevaOrdenTrabajo);     
     } catch (error) {
         return res.status(400).json({
             error:error.message, 
             message:'Error cargando orden',
             context: 'api > controllers > ordenTrabajoController > nuevaOrdenTrabajo'
         })  
-    }
-    
-}
 \end{lstlisting}
 
 En las líneas 5 y 6 es dónde se realiza la creación del registro, pasando los datos que se reciben como parámetros en el \textit{body} de la petición HTTP.
@@ -350,7 +344,6 @@ En las líneas 5 y 6 es dónde se realiza la creación del registro, pasando los
 Por último, en el código \ref{cod:updateregistro} se muestra cómo actualizar un registro de la base de datos, previamente trayendo el objeto por su ID:
 
 \begin{lstlisting}[label=cod:updateregistro,caption=Código resumido para actualizar un registro en la base de datos.]
-
 // Traigo la Orden de trabajo
 let orden = await OrdenTrabajo.findOne({
             where: {
@@ -434,7 +427,7 @@ En el código \ref{cod:routesot} se presenta un fragmento de ruteo correspondien
 
 En la declaración de esta ruta se puede observar que la dirección de la ruta en cuestión es \textit{/nueva} y se define con el método \textit{post()} en un objeto de \textit{router} llamado \textit{ordentrabajoRouter}. Este método indica que la ruta es accesible mediante una solicitud HTTP POST, que es utilizada para enviar información a un servidor para crear un recurso.
 
-Además, se especifica un controlador de ruta \textit{(handler)}. El controlador es una función que se ejecuta cuando se realiza una solicitud HTTP a la ruta especificada. En este caso, el controlador de ruta se llama \textit{nuevaOrdenTrabajo} y se define en el archivo \textit{ordentrabajoCtrl}, más adelante veremos en profundidad la carpeta \textit{controllers} y sus características.
+Además, se especifica un controlador de ruta \textit{(handler)}. El controlador es una función que se ejecuta cuando se realiza una solicitud HTTP a la ruta especificada. En este caso, el controlador de ruta se llama \textit{nuevaOrdenTrabajo} y se define en el archivo \textit{ordentrabajoCtrl}, más adelante se detallará la carpeta \textit{controllers} y sus características.
 
 Cuando se realiza una solicitud HTTP POST a la ruta \textit{/nueva}, Express ejecutará automáticamente la función \textit{nuevaOrdenTrabajo} definida en el controlador de ruta \textit{ordentrabajoCtrl}.
 
@@ -603,11 +596,11 @@ De esta manera el ciclo de lecturas de los nodos para una orden de trabajo es el
 \item Nodo ``mostrador``, se asigna el estado ``retirado``.
 \end{enumerate}
 
-Cuando un nodo envía o recibe una señal MQTT emite alertas sonoras para informar al usuario si la operación correspondiente tuvo éxito o fracaso. En la figura \ref{fig:mqttsonidosnodos} se puede observar cómo se implementaron estas señales sonoras en los nodos. Además se puede ver que existen dos opciones de sonidos, una es en forma de una sola nota denominada en la tabla \textit{Sonidos Clásicos} y otra es en forma de una melodía denominada \textit{Melodías}. Se configura en cada nodo la opción deseada desde las variables de entorno. Además se realiza en el código una validación para asegurarse que el tipo de \textit{buzzer} instalado es compatible con la opción \textit{Melodía}, en caso que no lo sea se ejecuta por defecto la opción \textit{Sonidos Clásicos}
+Cuando un nodo envía o recibe una señal MQTT emite alertas sonoras para informar al usuario si la operación correspondiente tuvo éxito o fracaso. En la figura \ref{fig:mqttsonidosnodos} se puede observar cómo se implementaron estas señales sonoras en los nodos. Además se puede ver que existen dos opciones de sonidos, una es en forma de una sola nota denominada en la tabla ``Sonidos Clásicos`` y otra es en forma de una melodía denominada ``Melodías``. Se configura en cada nodo la opción deseada desde las variables de entorno. Además se realiza en el código una validación para asegurarse que el tipo de \textit{buzzer} instalado es compatible con la opción ``Melodía``, en caso que no lo sea se ejecuta por defecto la opción ``Sonidos Clásicos``
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=.40]{./Figures/mqtt-sonidos-nodos.png}
+	\includegraphics[width=\textwidth]{./Figures/nodos-beeps.png}
 	\caption{Tabla de detalles de sonidos de nodos.}
 	\label{fig:mqttsonidosnodos}
 \end{figure}
@@ -670,7 +663,7 @@ A continuación se presenta un diagrama del flujo del código fuente para resolv
 	\label{fig:mqttcontrollerapi}
 \end{figure}
 
-Como puede observarse en la figura \ref{fig:mqttcontrollerapi} las validaciones dependen tanto del \textit{topic} recibido como del estado de la tarjeta. De acuerdo a esto se realizan los procesos correspondientes y se devuelve un mensaje MQTT al nodo emisor el que, de acuerdo al mensaje recibido, emitirá una señal sonora a través del \textit{buzzer} para informar al usuario si la acción tuvo éxito o no. También podemos notar que una tarjeta RFID no necesita ser creada previamente para ser utilizada, ya que se realiza la validación correspondiente para crearla durante el mismo proceso en que se ingresa una nueva orden de trabajo.
+Como puede observarse en la figura \ref{fig:mqttcontrollerapi} las validaciones dependen tanto del \textit{topic} recibido como del estado de la tarjeta. De acuerdo a esto se realizan los procesos correspondientes y se devuelve un mensaje MQTT al nodo emisor el que, de acuerdo al mensaje recibido, emitirá una señal sonora a través del \textit{buzzer} para informar al usuario si la acción tuvo éxito o no. También se puede notar que una tarjeta RFID no necesita ser creada previamente para ser utilizada, ya que se realiza la validación correspondiente para crearla durante el mismo proceso en que se ingresa una nueva orden de trabajo.
 
 
 \section{API para mensajería}
@@ -738,7 +731,7 @@ En la capa de modelo se implementaron los servicios de Ionic, estos son clases q
 
 Además se utilizó el manejo de rutas para mapear las URL a las páginas. Se asignó a cada módulo un archivo de rutas independiente para el manejo fluido de las páginas.
 
-En la figura \ref{fig:frontmvc} podemos observar una representación del flujo utilizando este patrón. 
+En la figura \ref{fig:frontmvc} se representa el flujo utilizando este patrón. 
 
 \begin{figure}[H]
 	\centering
@@ -931,7 +924,7 @@ Una vez confirmado el retiro se guardan los registros y estados correspondientes
 
 De esta manera finaliza el ciclo de un repuesto que ingresa a la empresa, es procesado y retirado luego por el cliente.
 
-En las figuras \ref{fig:retirar1} y \ref{fig:retirar2} vemos la interfaz para retirar una orden de trabajo.
+En las figuras \ref{fig:retirar1} y \ref{fig:retirar2} se muestra la interfaz para retirar una orden de trabajo.
 
 \begin{figure}[H]
 	\centering
@@ -952,7 +945,7 @@ En las figuras \ref{fig:retirar1} y \ref{fig:retirar2} vemos la interfaz para re
 
 Para la autenticación a la API de mensajería se utiliza un código QR que se obtiene consultando dicha API por protocolo HTTP. La misma devuelve un archivo SVG que se muestra en la interfaz gráfica del usuario para que pueda ser escaneada por su teléfono móvil y de esta manera acceder a las funciones de envío de mensajes a clientes.
 
-En la figura \ref{fig:frontqr} podemos ver la interfaz para autenticarse mediante código QR. También se puede observar el botón ``ACTUALIZAR`` para refrescar el código por uno nuevo´.
+En la figura \ref{fig:frontqr} se muestra la interfaz para autenticarse mediante código QR. También se puede observar el botón ``ACTUALIZAR`` para refrescar el código por uno nuevo´.
 
 \begin{figure}[H]
 	\centering
@@ -1077,9 +1070,9 @@ Al desplegar Docker Compose se levantan todos los servicios como se muestra en l
 
 A continuación se describe la implementación del \textit{hardware} utilizado y detallado en el capítulo \ref{sec:hardware}.
 
-Para el manejo de la red local se configuró un \textit{router} con una red Wi-Fi con filtrado de MAC \textit{Address} y un servidor DHCP con entrega IP fija a los dispositivos del sistema.
+Para el manejo de la red local se configuró un \textit{router} con una red Wi-Fi con filtrado de direcciones MAC y un servidor DHCP con entrega de IP fija a los dispositivos del sistema.
 
-En la figura \ref{fig:diagramared} podemos observar el diagrama de red del sistema, detallando que tipo de conexión realiza cada dispositivo.
+Al observar el diagrama de red en la figura \ref{fig:diagramared}, se puede obtener información detallada acerca de qué tipo de conexión utiliza cada dispositivo.
 
 \begin{figure}[H]
 	\centering
@@ -1088,14 +1081,49 @@ En la figura \ref{fig:diagramared} podemos observar el diagrama de red del siste
 	\label{fig:diagramared}
 \end{figure}
 
-En el servidor se implementó una placa Raspberry Pi 4. Para esta placa se imprimió un gabinete personalizado utilizando una impresora de tipo 3D, se incluyó además un espacio adicional en el gabinete para agregar un disco tipo SSD para ampliar las capacidades de la placa.
+En el servidor se implementó una placa Raspberry Pi 4. Para esta placa se imprimió un gabinete personalizado utilizando una impresora de tipo 3D, se incluyó además un espacio adicional en el gabinete para agregar un disco tipo SSD para ampliar las capacidades de la placa. En la figura \ref{fig:rbcase} se puede observar el gabinete personalizado.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.30]{./Figures/hardware/rbcase.png}
+	\caption{Case de Raspberry Pi con \textit{slot} para SSD.}
+	\label{fig:rbcase}
+\end{figure}
 
 
-Para los nodos se utilizó el microcontrolador NodeMCU Esp32, el sensor de radiofrecuencia MRC522 y un \textit{buzzer} sonoro. El diseño del circuito en un \textit{software} especializado y la impresión de la placa PCB estuvo a cargo de colaboradores.  
+Para los nodos se utilizó el microcontrolador NodeMCU ESP32, el sensor de radiofrecuencia MRC522 y un \textit{buzzer} sonoro. El diseño del circuito electrónico y la impresión de la placa PCB estuvo a cargo de colaboradores.
+
+En la figura \ref{fig:hwesquematico} se puede observar el diseño del circuito utilizado para los nodos.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/hardware/esquematico.png}
+	\caption{Circuito esquemático para placa PCB.}
+	\label{fig:hwesquematico}
+\end{figure}
+
+En la figura \ref{fig:hwlayout} se observa el diseño del circuito impreso para la placa PCB. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.35]{./Figures/hardware/layout.png}
+	\caption{Circuito impreso para placa PCB.}
+	\label{fig:hwlayout}
+\end{figure}  
+
+En la figura \ref{fig:hwnodo} se observan los componentes del nodo y la placa PCB.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.40]{./Figures/hardware/nodo.png}
+	\caption{Componentes y placa PCB para nodos.}
+	\label{fig:hwnodo}
+\end{figure}
+
 
 Para realizar el \textit{build} o compilación del código fuente en el microcontrolador NodeMCU ESP32 se utilizó el \textit{framework} PlatformIO \cite{platformio} y el IDE Visual Studio Code (VSCode) \cite{vscode}.
 
-En la figura \ref{fig:platformio-build} podemos observar el resultado de realizar el \textit{build}  o compilación del código fuente en la ESP32 utilizando PlatformIO y VSCode.
+En la figura \ref{fig:platformio-build} se puede observar el resultado de realizar el \textit{build}  o compilación del código fuente en la ESP32 utilizando PlatformIO y VSCode.
 
 \begin{figure}[H]
 	\centering
@@ -1104,7 +1132,7 @@ En la figura \ref{fig:platformio-build} podemos observar el resultado de realiza
 	\label{fig:platformio-build}
 \end{figure}
 
-En la figura \ref{fig:platformio-upload} podemos observar el resultado de realizar el \textit{upload} o el copiado del código ya compilado a la ESP32 en PlatformIO. Además se detalla la instalación de las librerías que se utilizan en el proyecto.
+En la figura \ref{fig:platformio-upload} se observa el resultado de realizar el \textit{upload} o el copiado del código ya compilado a la ESP32 en PlatformIO. Además se detalla la instalación de las librerías que se utilizan en el proyecto.
 
 \begin{figure}[H]
 	\centering
@@ -1113,8 +1141,7 @@ En la figura \ref{fig:platformio-upload} podemos observar el resultado de realiz
 	\label{fig:platformio-upload}
 \end{figure}
 
-Finalmente, en la figura \ref{fig:platformio-connect} podemos observar el resultado del código fuente ejecutándose en el microcontrolador y los detalles de la conexión exitosa a la red Wi-Fi y al \textit{broker} MQTT, indicando las direcciones IP y los puertos de conexión, además se muestran los mensajes que se configuraron en el código como el nombre de usuario y del nodo, la dirección IP y MAC de la ESP32 y el tópico MQTT al cual está suscripto. Esto se realiza mediante el \textit{framework}
- PlatformIO en modo monitor y con la ESP32 conectado a la PC mediante un cable USB de datos.
+Finalmente, en la figura \ref{fig:platformio-connect} se muestra el resultado del código fuente ejecutándose en el microcontrolador y los detalles de la conexión exitosa a la red Wi-Fi y al \textit{broker} MQTT, indicando las direcciones IP y los puertos de conexión, además se muestran los mensajes que se configuraron en el código como el nombre de usuario y del nodo, la dirección IP y MAC de la ESP32 y el tópico MQTT al cual está suscripto. Esto se realiza mediante el \textit{framework} PlatformIO en modo monitor y con la ESP32 conectada a la PC mediante un cable USB de datos.
  
 \begin{figure}[H]
 	\centering
